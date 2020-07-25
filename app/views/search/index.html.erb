@@ -1,0 +1,48 @@
+<h1>Search#index</h1>
+<p>Find me in app/views/search/index.html.erb</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Channel</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Country</th>
+      <th>Custom url</th>
+      <th>Thumbnail</th>
+      <th>Retrieved at</th>
+      <th>Origin</th>
+      <th>Has related</th>
+      <th>Show related</th>
+      <th>Activity score</th>
+      <th>Activity</th>
+      <th>Rss next parsing</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @channels.each do |channel| %>
+      <tr>
+        <td><%= channel.id %></td>
+        <td><%= channel.channel_id %></td>
+        <td><%= channel.title %></td>
+        <td><%= channel.description %></td>
+        <td><%= channel.country %></td>
+        <td><%= channel.custom_url %></td>
+        <td><%= channel.thumbnail %></td>
+        <td><%= channel.retrieved_at %></td>
+        <td><%= channel.origin %></td>
+        <td><%= channel.has_related %></td>
+        <td><%= channel.show_related %></td>
+        <td><%= channel.activity_score %></td>
+        <td><%= channel.activity %></td>
+        <td><%= channel.rss_next_parsing %></td>
+        <td><%= link_to 'Show', channel %></td>
+        <td><%= link_to 'Edit', edit_channel_path(channel) %></td>
+        <td><%= link_to 'Destroy', channel, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

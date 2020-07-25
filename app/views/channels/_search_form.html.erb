@@ -1,0 +1,10 @@
+<%= form_with scope: :search, url: '/channels', method: :get, local: true do |form| %>
+    <%= form.label :status %>
+    Status <%= form.select :status, options_for_select(Pipeline::CHANNEL_STATUS, search.status) %>
+
+
+    Country <%= form.select :country, options_for_select(Channel::COUNTRIES, search.country) %>
+
+
+    <input type="submit" name="commit" value="Search">
+<% end %>

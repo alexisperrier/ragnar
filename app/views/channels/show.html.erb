@@ -1,0 +1,82 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Channel:</strong>
+  <%= @channel.channel_id %>
+  <a href='https://www.youtube.com/channel/<%= @channel.id %>' target=_blank>Ext</a>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @channel.title %>
+</p>
+
+<p>
+      <% if @channel.thumbnail %>
+          <%= image_tag @channel.thumbnail %>
+      <% end %>
+  <strong>Description:</strong>
+  <%= @channel.description %>
+</p>
+
+<p>
+  <strong>Country:</strong>
+  <%= @channel.country %>
+</p>
+
+<p>
+  <strong>Custom url:</strong>
+  <%= @channel.custom_url %>
+</p>
+
+
+<p>
+  <strong>Retrieved at:</strong>
+  <%= @channel.retrieved_at %>
+</p>
+
+<p>
+  <strong>Origin:</strong>
+  <%= @channel.origin %>
+</p>
+
+<p>
+  <strong>Has related:</strong>
+  <%= @channel.has_related %>
+</p>
+
+<p>
+  <strong>Show related:</strong>
+  <%= @channel.show_related %>
+</p>
+
+<p>
+  <strong>Activity score:</strong>
+  <%= @channel.activity_score %>
+</p>
+
+<p>
+  <strong>Activity:</strong>
+  <%= @channel.activity %>
+</p>
+
+<p>
+  <strong>Rss next parsing:</strong>
+  <%= @channel.rss_next_parsing %>
+</p>
+
+<br />Status: <%= @channel.pipeline.status %>
+<br />
+<br />Views: <%= @channel.try(:channel_stat).try(:views) %>
+<br />Videos: <%= @channel.try(:channel_stat).try(:videos) %>
+<br />Subscribers: <%= @channel.try(:channel_stat).try(:subscribers) %>
+
+
+<p>
+  <strong>
+      <a href='https://www.youtube.com/feeds/videos.xml?channel_id=<%= @channel.id %>' target=_blank>RSS</a>
+  </strong>
+</p>
+
+<%= link_to 'Edit', edit_channel_path(@channel) %> |
+<%= link_to 'Back', channels_path %>

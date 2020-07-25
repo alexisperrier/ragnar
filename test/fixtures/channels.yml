@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id: 
+  channel: one
+  title: MyString
+  description: MyString
+  country: MyString
+  custom_url: MyString
+  thumbnail: MyString
+  retrieved_at: 2020-07-22 18:09:38
+  origin: MyString
+  has_related: false
+  show_related: MyString
+  activity_score: 1.5
+  activity: MyString
+  rss_next_parsing: 2020-07-22 18:09:38
+
+two:
+  id: 
+  channel: two
+  title: MyString
+  description: MyString
+  country: MyString
+  custom_url: MyString
+  thumbnail: MyString
+  retrieved_at: 2020-07-22 18:09:38
+  origin: MyString
+  has_related: false
+  show_related: MyString
+  activity_score: 1.5
+  activity: MyString
+  rss_next_parsing: 2020-07-22 18:09:38

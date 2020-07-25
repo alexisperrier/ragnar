@@ -1,0 +1,58 @@
+<%= form_with(model: channel, local: true) do |form| %>
+  <% if channel.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(channel.errors.count, "error") %> prohibited this channel from being saved:</h2>
+
+      <ul>
+        <% channel.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h2><%= channel.title %></h2>
+
+  <%= form.fields_for :pipeline, @channel.pipeline do |pp_form| %>
+      <%= pp_form.label :status %>
+      <%= pp_form.select :status, options_for_select(Pipeline::CHANNEL_STATUS, channel.pipeline.status) %>
+  <% end %>
+
+  <% if @channel.thumbnail %>
+  <p>
+      <%= image_tag @channel.thumbnail %>
+  </p>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, size: "80x16" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :country %>
+    <%= form.text_field :country %>
+  </div>
+
+  <div class="field">
+    <%= form.label :origin %>
+    <%= form.text_field :origin %>
+  </div>
+
+  <div class="field">
+      activity_score: <%= channel.activity_score %>
+    <%= form.label :activity %>
+    <%= form.select :activity, options_for_select(Channel::ACTIVITIES, channel.activity) %>
+
+  </div>
+
+
+  <div class="field">
+    <%= form.label :rss_next_parsing %>
+    <%= form.date_select :rss_next_parsing %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
