@@ -3,80 +3,98 @@
 <!-- search form -->
 <%= render 'search_form', search: @search %>
 
-<h1> <%= @channel_count %> Channels</h1>
+
+<div >
+    <div class="row">
+        <div class="x_panel tile ">
+
+            <div class="x_title">
+            <h2> <%= @channel_count %> Channels
+                <% if @export_url_csv %><small> <a href = "<%= @export_url_csv %>"> Export csv</a> </small><small><% end %>
+            </h2>
+            </div>
+        </div>
+    </div>
 
 
-<h3>
-    Export <a href = "<%= @export_url_csv %>">csv</a>
-</h3>
+      <div class="row">
+          <div class="col-md-3">
+              <div class="x_content">
+                      <div class="image view view-first" ">
+                          <% if @activity %>
+                              <%= bar_chart @activity %>
+                              <% end %>
+                      </div>
+                </div>
+          </div>
+          <div class="col-md-3">
+                <div class="x_content">
+                      <div class="image view view-first" ">
+                          <% if @activity %>
+                              <%= column_chart @activity_score %>
+                              <% end %>
+                      </div>
+                </div>
+          </div>
+      </div>
+  </div>
 
-<%= paginate @channels %>
-<table>
 
-  <tbody>
-    <% @channels.each do |channel| %>
-      <tr style = "border: #999 1px dashed;">
-        <td valign="top" style = "border: #999 1px dashed;">
-            <% if channel.title %>
-                <h2><%= link_to channel.title, channel %></h2>
-            <% else %>
-                <%= link_to channel.id, channel %>
-            <% end %>
-            <p>Status:
-                <strong>
-                <% if channel.pipeline %>
-                    <%= channel.pipeline.status %>
-                <% end %>
-                </strong>
-            </p>
-            <br />Country: <%= channel.country %>
-            <br />Activity: <%= channel.activity %> <%= channel.activity_score %>
-            <br />
-            <br />Views: <%= channel.try(:channel_stat).try(:views) %>
-            <br />Videos: <%= channel.try(:channel_stat).try(:videos) %>
-            <br />Subscribers: <%= channel.try(:channel_stat).try(:subscribers) %>
 
-            <br />
-            <br />
-            Creation:
-            <% if channel.created_at %>
-                <%= channel.created_at.to_date %>
-            <% end %>
 
-            <br />
-            <% if channel.retrieved_at %>
-                Last Info: <%= channel.retrieved_at.to_date %>
-            <% end %>
-            <br />
+      <div class="row">
+          <div class="col-md-12">
+            <div class="x_panel tile ">
+                <div class="x_content" >
 
-            <br />
-            Next <a href='https://www.youtube.com/feeds/videos.xml?channel_id=<%= channel.id %>' target=_blank>RSS</a>
-            Parsing:
-            <% if channel.rss_next_parsing %>
-                <%= channel.rss_next_parsing.to_date %>
-            <% end %>
-            <br />Source: <%= channel.origin %>
-            <br />
-            <%= link_to 'Edit', edit_channel_path(channel) %>
-            <span  style = "display:inline; float: right; ">
-            <%= channel.id %>
-            </span>
+            <%= paginate @channels %>
+            <ul class="list-unstyled msg_list">
+            <% @channels.each do |channel| %>
+            <li style = "background: <%= cycle('#f7f7f7', '#FFF') -%>;">
 
-        </td>
-        <td valign = top width=600px>
-            <% if channel.thumbnail %>
-            <span  style = "display:inline; float: left; padding-right: 10px">
-                <%= image_tag channel.thumbnail %>
-            </span>
-            <% end %>
+            <div style = "      display: flex; x-justify-content: space-around; x-align-items: stretch;">
+        <!-- left -->
+             <div style = "width: 300px; flex: 0 0 300px; border-right: 1px dashed #999; padding-left: 8px; padding-right: 8px;">
+                 <% if channel.thumbnail %>
+                    <%= image_tag channel.thumbnail %>
+                 <% end %>
+                 <% if channel.title %>
+                    <h3><%= link_to channel.title, channel %></h3>
+                 <% end %>
+                 <br />
+                     <%= link_to channel.id, channel %>
+
+             </div>
+             <!-- center -->
+             <div class="column"  style = " width: 300px; flex: 0 0 300px; padding-left: 8px; padding-right: 8px;">
+                 <% if channel.pipeline %>
+                 Status: <strong><%= channel.pipeline.status %></strong>
+                 <% end %>
+                 <br />Country: <%= channel.country %>
+                 <br />Activity: <%= channel.activity %> <%= channel.activity_score %>
+                 <br />Source: <%= channel.origin %>
+             </div>
+             <!-- right -->
+             <div class="column"  style = "  border-left: 1px dashed #999; flex: 300px; padding-left: 15px;">
+
+
             <p style = "display:inline;">
                 <%= channel.description %>
             </p>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+            <div  style = "">
+                <%= channel.try(:channel_stat).try(:videos) %> Videos |
+                <%= channel.try(:channel_stat).try(:subscribers) %> Subscribers |
+            <%= channel.try(:channel_stat).try(:views) %> Views
+            </div>
+        </div>
+    </div>
 
-<br>
-<%= paginate @channels %>
+
+        </li>
+        <% end %>
+        </ul>
+    </div>
+
+</div>
+</div>
+</div>

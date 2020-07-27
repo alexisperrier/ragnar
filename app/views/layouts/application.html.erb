@@ -9,7 +9,25 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
-    <%= yield %>
-  </body>
+<body class="nav-md">
+<div class="container body">
+  <% flash.each do |key, value| %>
+      <div align="center" id="flash" class="alert alert-<%= key %>"><%= value %></div>
+  <% end %>
+
+  <%= render "partials/topnav" %>
+  <div class="main_container" >
+
+      <div class="col-md-3 left_col ">
+          <%= render "partials/sidenav" %>
+      </div>
+      <div class="right_col" role="main"  style = "border: #F00 1px solid;">
+          <%= yield %>
+          <%= render "partials/footer" %>
+      </div>
+
+      <%= javascript_include_tag 'footermanifest', 'data-turbolinks-track' => true %>
+  </div>
+</div>
+</body>
 </html>

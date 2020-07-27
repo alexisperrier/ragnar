@@ -13,3 +13,10 @@
  *= require_tree .
  *= require_self
  */
+ @import "gentelella";
+ @import "gentelella-custom";
+ /* @import "font-awesome"; */
+ @import 'font_awesome5_webfont';
+ /*
+ *= require font-awesome
+ */

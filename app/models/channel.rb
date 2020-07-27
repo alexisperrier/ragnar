@@ -1,4 +1,5 @@
 class Channel < ApplicationRecord
+    require 'csv'
     self.primary_key = 'channel_id'
     self.table_name = 'channel'
     has_one :pipeline
@@ -23,6 +24,7 @@ class Channel < ApplicationRecord
                 description created_at retrieved_at}
         pipeline_attributes = %w{ status lang}
         stat_attributes     = %w{ views subscribers videos}
+
         CSV.generate(headers: true) do |csv|
           csv << channel_attributes + pipeline_attributes + stat_attributes
           all.each do |channel|

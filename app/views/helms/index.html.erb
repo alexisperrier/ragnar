@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+
+<div >
+    <div class="row">
+        <div class="x_panel tile ">
+            <div class="x_title">
+            <h2> Jobs timeline</h2>
+            </div>
+        </div>
+    </div>
+
+
+      <div class="row">
+              <div class="x_content">
+                      <div class="image view view-first" ">
+                          <% @jobs.each do |job| %>
+
+
+
+                          <strong><%=  job %></strong>: <%= @data[job][-1] %>
+                            <% @hdata = Hash[(0...@data[job].size).zip @data[job]] %>
+                          <%= column_chart @hdata %>
+                          <% end %>
+
+                      </div>
+                </div>
+      </div>
+  </div>

@@ -2,7 +2,9 @@ class ChannelsController < ApplicationController
     before_action :set_channel, only: [:show, :edit, :update]
     before_action :set_search,  only: [:index]
 
+
     def index
+        @user = current_user.email
         if params[:search]
             query = Channel.joins(:pipeline).includes(:channel_stat)
             if @search.status
@@ -11,6 +13,10 @@ class ChannelsController < ApplicationController
             if @search.country and @search.country != '--'
                 query = query.where(country: @search.country)
             end
+
+            @activity = query.select(:activity).group(:activity).count()
+            @activity_score = query.select(:activity_score).group(:activity_score).count()
+
             if @search.sort_by
                 query = query.order("#{@search.sort_by} #{@search.sort_asc}")
             end
@@ -19,24 +25,21 @@ class ChannelsController < ApplicationController
             query = Channel.active.order("#{@search.sort_by} #{@search.sort_asc}")
         end
         query = query.preload(:pipeline)
+
         @channel_count = query.count()
         if request.format == 'text/csv'
             @channels = query
         else
             @channels = query.order(:id).page params[:page]
         end
+
         # ugly but working
         r = request.fullpath.split('?');
-        @export_url_csv = r[0][1..] + ".csv?" + r[1]
-
-        puts "--" * 20
-        puts "request.format.string #{request.format} "
-        puts "--" * 20
+        @export_url_csv =  r.length > 1 ? "exports.csv?object=channels&" + r[1] : "exports.csv?object=channels"
 
         respond_to do |format|
             format.html
             format.json
-            format.csv { send_data @channels.to_csv, filename: "channels-#{Date.today}.csv" }
         end
     end
 

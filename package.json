@@ -7,6 +7,9 @@
     "@rails/ujs": "^6.0.0",
     "@rails/webpacker": "4.2.2",
     "bootstrap": "^4.5.0",
+    "chartkick": "^3.2.1",
+    "gentelella": "^1.4.0",
+    "highcharts": "^8.1.2",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
     "turbolinks": "^5.2.0"
