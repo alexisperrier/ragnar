@@ -1,9 +1,11 @@
 <%= form_with scope: :search, url: '/channels', method: :get, local: true do |form| %>
-    <%= form.label :status %>
     Status <%= form.select :status, options_for_select(Pipeline::CHANNEL_STATUS, search.status) %>
 
 
     Country <%= form.select :country, options_for_select(Channel::COUNTRIES, search.country) %>
+
+    Order by <%= form.select :sort_by, options_for_select(['title','activity_score'], search.sort_by) %>
+    <%= form.select :sort_asc, options_for_select(['asc','desc'], search.sort_asc) %>
 
 
     <input type="submit" name="commit" value="Search">

@@ -11,16 +11,32 @@ class ChannelsController < ApplicationController
             if @search.country and @search.country != '--'
                 query = query.where(country: @search.country)
             end
+            if @search.sort_by
+                query = query.order("#{@search.sort_by} #{@search.sort_asc}")
+            end
             query = query.preload(:pipeline)
         else
-            query = Channel.active
+            query = Channel.active.order("#{@search.sort_by} #{@search.sort_asc}")
         end
+        query = query.preload(:pipeline)
+        @channel_count = query.count()
+        if request.format == 'text/csv'
+            @channels = query
+        else
+            @channels = query.order(:id).page params[:page]
+        end
+        # ugly but working
+        r = request.fullpath.split('?');
+        @export_url_csv = r[0][1..] + ".csv?" + r[1]
 
-        @channels = query.preload(:pipeline).order(:id).page params[:page]
+        puts "--" * 20
+        puts "request.format.string #{request.format} "
+        puts "--" * 20
 
         respond_to do |format|
             format.html
             format.json
+            format.csv { send_data @channels.to_csv, filename: "channels-#{Date.today}.csv" }
         end
     end
 
@@ -57,7 +73,7 @@ class ChannelsController < ApplicationController
         if params[:search]
             @search = Search.new(params[:search])
         else
-            @search = Search.new({status: 'active', country: 'DK' })
+            @search = Search.new({status: 'active', country: 'FR', sort_by:'title', sort_asc: 'asc' })
         end
         puts "--"*20
         puts "search: "

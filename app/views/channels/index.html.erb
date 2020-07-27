@@ -3,7 +3,13 @@
 <!-- search form -->
 <%= render 'search_form', search: @search %>
 
-<h1>Channels</h1>
+<h1> <%= @channel_count %> Channels</h1>
+
+
+<h3>
+    Export <a href = "<%= @export_url_csv %>">csv</a>
+</h3>
+
 <%= paginate @channels %>
 <table>
 

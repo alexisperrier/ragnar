@@ -23,7 +23,7 @@ default: &default
 
 development:
   <<: *default
-  database: ytkojo-devdb
+  database: ytkojo-proddb
   username: postgres
   port: 3307
   password: <%= ENV['YTKOJO_DB_PWD'] %>
