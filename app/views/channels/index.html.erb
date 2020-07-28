@@ -3,7 +3,6 @@
 <!-- search form -->
 <%= render 'search_form', search: @search %>
 
-
 <div >
     <div class="row">
         <div class="x_panel tile ">
@@ -20,7 +19,7 @@
       <div class="row">
           <div class="col-md-3">
               <div class="x_content">
-                      <div class="image view view-first" ">
+                      <div class="image view view-first">
                           <% if @activity %>
                               <%= bar_chart @activity %>
                               <% end %>
@@ -29,7 +28,7 @@
           </div>
           <div class="col-md-3">
                 <div class="x_content">
-                      <div class="image view view-first" ">
+                      <div class="image view view-first">
                           <% if @activity %>
                               <%= column_chart @activity_score %>
                               <% end %>

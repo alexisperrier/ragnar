@@ -1,0 +1,39 @@
+<li style = "background: <%= cycle('#f7f7f7', '#FFF') -%>;">
+    <a href="https://www.youtube.com/watch?v=<%= video.video_id %>" target="_blank"><img src ="<%= video.thumbnail %>" width=120px></a>
+
+    <div style='width:100%; float:left; display:inline;'>
+        <a href="/videos/<%= video.video_id %>"><%= video.title.truncate(50) %></a>
+
+    <div>
+        <div>
+            <% if video.channel %>
+            <a href="/channels/<%= video.channel_id %>"><strong><%= video.channel.title %></strong></a>
+            <% else %>
+            <a href="/channels/<%= video.channel_id %>"><strong><%= video.channel_id %></strong></a>
+            <% end %>
+            <span style="float:right; text-align:right;"><%= video.pubdate %></span>
+        </div>
+
+        <div >
+        <% if video.category %>
+            <%= video.category.category %>
+        <% end %>
+        <% if video.maxviews %>
+            <span style="float:right; text-align:right;"><%= video.maxviews %> vues</span>
+        <% end %>
+        </div>
+        <div>
+        video.reco_count
+        <% if video.seconds %>
+            <span style="float:right; text-align:right;"><%= video.seconds %>s</span>
+        <% end %>
+        </div>
+
+
+        <% if video.wikitopics %>
+        <%= video.wikitopics.split(',').map{|w| w.gsub(/[\[\]\']/, '').gsub(/[-_]/, ' ').strip }.join(', ') %>
+        <% end %>
+    </div>
+    </div>
+
+</li>

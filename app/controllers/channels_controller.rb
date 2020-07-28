@@ -4,7 +4,6 @@ class ChannelsController < ApplicationController
 
 
     def index
-        @user = current_user.email
         if params[:search]
             query = Channel.joins(:pipeline).includes(:channel_stat)
             if @search.status
@@ -27,11 +26,7 @@ class ChannelsController < ApplicationController
         query = query.preload(:pipeline)
 
         @channel_count = query.count()
-        if request.format == 'text/csv'
-            @channels = query
-        else
-            @channels = query.order(:id).page params[:page]
-        end
+        @channels = query.order(:id).page params[:page]
 
         # ugly but working
         r = request.fullpath.split('?');

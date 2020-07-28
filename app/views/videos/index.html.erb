@@ -1,0 +1,68 @@
+<p id="notice"><%= notice %></p>
+
+<div >
+    <div class="row">
+        <div class="x_panel tile ">
+            <div class="x_title">
+            <h2> <%= @video_count %> Videos
+                <% if @export_url_csv %><small> <a href = "<%= @export_url_csv %>"> Export csv</a> </small><small><% end %>
+            </h2>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-3">
+        <div class="x_content">
+        <div class="image view view-first">
+        <% if @activity %>
+        <%= bar_chart @activity %>
+        <% end %>
+        </div>
+        </div>
+        </div>
+        <div class="col-md-3">
+        <div class="x_content">
+        <div class="image view view-first">
+        <% if @activity %>
+        <%= column_chart @activity_score %>
+        <% end %>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-4 ">
+        <div class="x_panel" >
+            <div class="x_title">
+                <h2><%= @recent_videos_count %> <small>Vidéos récentes</small></h2>
+                <div class="clearfix"></div>
+                <%= paginate @recent_videos %>
+            </div>
+            <div class="x_content">
+                <ul class="list-unstyled msg_list">
+                <% @recent_videos.each do |video| %>
+                    <%= render 'vignette', video: video %>
+                <% end %>
+                </ul>
+            </div>
+        </div>
+</div>
+
+<div class="col-md-4 ">
+        <div class="x_panel" >
+            <div class="x_title">
+                <h2>20 <small>Vidéos les plus vues</small></h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <ul class="list-unstyled msg_list">
+                <% @most_viewed_videos.each do |video| %>
+                    <%= render 'vignette', video: video %>
+                <% end %>
+                </ul>
+            </div>
+        </div>
+</div>

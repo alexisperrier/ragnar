@@ -3,11 +3,10 @@ class Channel < ApplicationRecord
     self.primary_key = 'channel_id'
     self.table_name = 'channel'
     has_one :pipeline
-    has_one :channel_stat
     accepts_nested_attributes_for :pipeline
+    has_one :channel_stat
+    has_many :video
 
-    # default_scope { order(activity_score: :desc) }
-    # default_scope { where("pipeline.status = 'active'") }
     scope :active, -> {  includes(:channel_stat).joins(:pipeline).where("pipeline.status = 'active'").preload(:pipeline)  }
 
     ACTIVITIES = ["frenetic", "energised", "active", "steady", "sluggish", "asleep", "cold"]

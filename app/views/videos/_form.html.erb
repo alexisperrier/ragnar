@@ -1,0 +1,122 @@
+<%= form_with(model: video, local: true) do |form| %>
+  <% if video.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(video.errors.count, "error") %> prohibited this video from being saved:</h2>
+
+      <ul>
+      <% video.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :id %>
+    <%= form.text_field :id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :video_id %>
+    <%= form.text_field :video_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :channel_id %>
+    <%= form.text_field :channel_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :summary %>
+    <%= form.text_field :summary %>
+  </div>
+
+  <div class="field">
+    <%= form.label :thumbnail %>
+    <%= form.text_field :thumbnail %>
+  </div>
+
+  <div class="field">
+    <%= form.label :category_id %>
+    <%= form.text_field :category_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :duration %>
+    <%= form.text_field :duration %>
+  </div>
+
+  <div class="field">
+    <%= form.label :privacy_status %>
+    <%= form.text_field :privacy_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :caption %>
+    <%= form.check_box :caption %>
+  </div>
+
+  <div class="field">
+    <%= form.label :published_at %>
+    <%= form.datetime_select :published_at %>
+  </div>
+
+  <div class="field">
+    <%= form.label :retrieved_at %>
+    <%= form.datetime_select :retrieved_at %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tags %>
+    <%= form.text_field :tags %>
+  </div>
+
+  <div class="field">
+    <%= form.label :origin %>
+    <%= form.text_field :origin %>
+  </div>
+
+  <div class="field">
+    <%= form.label :footer %>
+    <%= form.text_field :footer %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pubdate %>
+    <%= form.text_field :pubdate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :live_content %>
+    <%= form.text_field :live_content %>
+  </div>
+
+  <div class="field">
+    <%= form.label :default_audio_language %>
+    <%= form.text_field :default_audio_language %>
+  </div>
+
+  <div class="field">
+    <%= form.label :default_language %>
+    <%= form.text_field :default_language %>
+  </div>
+
+  <div class="field">
+    <%= form.label :seconds %>
+    <%= form.number_field :seconds %>
+  </div>
+
+  <div class="field">
+    <%= form.label :wikitopics %>
+    <%= form.text_field :wikitopics %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
