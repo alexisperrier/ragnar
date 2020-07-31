@@ -4,7 +4,7 @@
 
     Country <%= form.select :country, options_for_select(Channel::COUNTRIES, search.country) %>
 
-    Order by <%= form.select :sort_by, options_for_select(['title','activity_score'], search.sort_by) %>
+    Order by <%= form.select :sort_by, options_for_select(['title','activity_score','retrieved_at'], search.sort_by) %>
     <%= form.select :sort_asc, options_for_select(['asc','desc'], search.sort_asc) %>
 
 

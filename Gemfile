@@ -61,3 +61,4 @@ gem 'devise'
 gem "chartkick"
 
 # gem 'daru-view', git: 'https://github.com/SciRuby/daru-view'
+gem 'find_with_order'

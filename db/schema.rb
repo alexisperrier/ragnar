@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_27_171104) do
+ActiveRecord::Schema.define(version: 2020_07_31_134642) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -114,6 +114,15 @@ ActiveRecord::Schema.define(version: 2020_07_27_171104) do
     t.integer "count_", default: 0, null: false
     t.datetime "created_at", default: -> { "now()" }
     t.index ["jobname"], name: "helm_jobname"
+  end
+
+  create_table "lists", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_lists_on_user_id"
   end
 
   create_table "origin", id: false, force: :cascade do |t|

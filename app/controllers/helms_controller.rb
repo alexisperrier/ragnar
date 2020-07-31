@@ -8,6 +8,6 @@ class HelmsController < ApplicationController
         end
         # how much in the flow
         @flow = Flow.group(:flowname).count
-
+        @page_title = "YT Admin"
     end
 end

@@ -1,16 +1,6 @@
 <p id="notice"><%= notice %></p>
-<%= render 'search_form', search: @search %>
 
 <div >
-    <div class="row">
-        <div class="x_panel tile ">
-            <div class="x_title">
-            <h2> <%= @video_count %> Videos
-                <% if @export_url_csv %><small> <a href = "<%= @export_url_csv %>"> Export csv</a> </small><small><% end %>
-            </h2>
-            </div>
-        </div>
-    </div>
 
     <div class="row">
         <div class="col-md-3">
@@ -37,14 +27,29 @@
 <div class="col-md-4 ">
         <div class="x_panel" >
             <div class="x_title">
-                <h2><%= @videos_count %> <small>Vidéos</small></h2>
+                <h2>20 Vidéos les plus vues <small style = "font-size: 12px;">Dernières 24h</small></h2>                
                 <div class="clearfix"></div>
-                <%= paginate @videos %>
             </div>
             <div class="x_content">
                 <ul class="list-unstyled msg_list">
-                <% @videos.each do |video| %>
-                    <%= render 'vignette', video: video, upstream: @upstream, maxviews: @maxviews  %>
+                <% @mvv.each do |video| %>
+                    <%= render 'videos/vignette', video: video, upstream: @mvv_upstream, maxviews: @mvv_maxviews  %>
+                <% end %>
+                </ul>
+            </div>
+        </div>
+</div>
+
+<div class="col-md-4 ">
+        <div class="x_panel" >
+            <div class="x_title">
+                <h2>20 <small>Vidéos les plus recommandées</small></h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <ul class="list-unstyled msg_list">
+                <% @mrecv.each do |video| %>
+                    <%= render 'videos/vignette', video: video, upstream: @mrecv_upstream, maxviews: @mrecv_maxviews  %>
                 <% end %>
                 </ul>
             </div>

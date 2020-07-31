@@ -1,82 +1,186 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Channel:</strong>
-  <%= @channel.channel_id %>
-  <a href='https://www.youtube.com/channel/<%= @channel.id %>' target=_blank>Ext</a>
-</p>
+<div class="row">
+    <!-- <div class="col-md-3"> -->
+        <div class="x_panel tile ">
+            <div class="x_title">
+                <h2> <%= @channel.title %></h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content" style = "width:300px; ">
+                <ul>
+                    <li>
+                        <strong>Country:</strong><% if @channel.country %>  <%= @channel.country %><% end %>
+                    </li>
+                    <li><strong>Status:</strong> <%= @channel.pipeline.status %></li>
+                    <li>
+                        <strong>Activity:</strong>
+                            <% if @channel.activity_score %> <%= @channel.activity_score %><% end %>
+                            <% if @channel.activity %> <%= @channel.activity %><% end %>
+                    </li>
+                    <li><strong>Origin:</strong> <%= @channel.origin %></li>
+                </ul>
+                <ul>
+                    <li>Views: <%= @channel.try(:channel_stat).try(:views) %></li>
+                    <li>Videos: <%= @channel.try(:channel_stat).try(:videos) %></li>
+                    <li>Subscribers: <%= @channel.try(:channel_stat).try(:subscribers) %></li>
+                </ul>
 
-<p>
-  <strong>Title:</strong>
-  <%= @channel.title %>
-</p>
+                <% if @channel.thumbnail %>
+                <%= image_tag @channel.thumbnail %>
+                <% end %>
+                <p>
+                  <%= @channel.description %>
+                </p>
+                <div>
+                <%= link_to 'Edit', edit_channel_path(@channel) %> -
+                <a href='https://www.youtube.com/feeds/videos.xml?channel_id=<%= @channel.id %>' target=_blank>RSS</a>
+                <span style= "float:right;">
+                    <a href='https://www.youtube.com/channel/<%= @channel.id %>' target=_blank><%= @channel.channel_id %></a>
 
-<p>
-      <% if @channel.thumbnail %>
-          <%= image_tag @channel.thumbnail %>
-      <% end %>
-  <strong>Description:</strong>
-  <%= @channel.description %>
-</p>
+                </span>
+                </div>
+            </div>
+            <% if @channel.topic and @channel.topic.topics  %>
+                <div class="col-md-3">
+                    <div class="x_title">
+                        <h3><small>Main Topics</small></h3>
+                        <div class="clearfix"></div>
+                    </div>
 
-<p>
-  <strong>Country:</strong>
-  <%= @channel.country %>
-</p>
+                    <div class="x_content">
+                        <ul class="msg_list">
+                        <% @channel.topic.topics.each do |k,t| %>
+                            <li><%= k %>: <%= t %></li>
+                        <% end %>
+                        </ul>
+                    </div>
+                </div>
+            <% end %>
 
-<p>
-  <strong>Custom url:</strong>
-  <%= @channel.custom_url %>
-</p>
+        </div>
+    </div>
 
+        <div class="x_panel tile "  style = "width: 500px;">
+        <div class="x_title">
+            <h3><small>#videos by day</small></h3>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div class="image view view-first">
+                <% if @dailypub %>
+                    <%= column_chart @dailypub %>
+                <% end %>
+            </div>
+         </div>
+         </div>
 
-<p>
-  <strong>Retrieved at:</strong>
-  <%= @channel.retrieved_at %>
-</p>
-
-<p>
-  <strong>Origin:</strong>
-  <%= @channel.origin %>
-</p>
-
-<p>
-  <strong>Has related:</strong>
-  <%= @channel.has_related %>
-</p>
-
-<p>
-  <strong>Show related:</strong>
-  <%= @channel.show_related %>
-</p>
-
-<p>
-  <strong>Activity score:</strong>
-  <%= @channel.activity_score %>
-</p>
-
-<p>
-  <strong>Activity:</strong>
-  <%= @channel.activity %>
-</p>
-
-<p>
-  <strong>Rss next parsing:</strong>
-  <%= @channel.rss_next_parsing %>
-</p>
-
-<br />Status: <%= @channel.pipeline.status %>
-<br />
-<br />Views: <%= @channel.try(:channel_stat).try(:views) %>
-<br />Videos: <%= @channel.try(:channel_stat).try(:videos) %>
-<br />Subscribers: <%= @channel.try(:channel_stat).try(:subscribers) %>
+         <div class="x_panel tile " style = "width: 500px;">
+        <div class="x_title">
+            <h3><small>Views by video - avg: <%= @avg_views %> </small></h3>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content" >
+                <div class="image view view-first">
+                    <% if @views %>
+                        <%= line_chart @views %>
+                    <% end %>
+                </div>
+          </div>
+        </div>
+    <!-- </div> -->
 
 
-<p>
-  <strong>
-      <a href='https://www.youtube.com/feeds/videos.xml?channel_id=<%= @channel.id %>' target=_blank>RSS</a>
-  </strong>
-</p>
 
-<%= link_to 'Edit', edit_channel_path(@channel) %> |
-<%= link_to 'Back', channels_path %>
+<div class="col-md-3">
+    <div class="x_panel" >
+        <div class="x_title">
+            <h2>Related <small>Channels </small></h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <ul class="list-unstyled msg_list">
+            <% @channel.related_channels.each do |channel| %>
+            <li>
+                <% if channel.class == Channel  %>
+                    <%= link_to channel.title, channel_path(channel) %>
+                <% else %>
+                    <%= link_to channel, channel_path(channel) %>
+                <% end %>
+            </li>
+            <% end %>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3">
+<div class="x_panel" >
+    <div class="x_title">
+        <h2>Top 5<small>Vidéos </small></h2>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+        <ul class="list-unstyled msg_list">
+        <% @most_viewed_videos.each do |video| %>
+            <%= render 'videos/vignette', video: video, upstream: @mvv_upstream, maxviews: @mvv_maxviews  %>
+        <% end %>
+        </ul>
+    </div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="x_panel" >
+    <div class="x_title">
+        <h2><%= @videos_count %> <small>Vidéos </small></h2>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+        <ul class="list-unstyled msg_list">
+        <% @videos.each do |video| %>
+            <%= render 'videos/vignette', video: video, upstream: @recent_upstream, maxviews: @recent_maxviews  %>
+        <% end %>
+        </ul>
+    </div>
+</div>
+</div>
+
+
+<div class="col-md-3">
+<div class="x_panel" >
+    <div class="x_title">
+        <h2> <%= @downstream_counts.size %>  Downstream <small>Channels </small></h2>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+        <ul class="list-unstyled msg_list">
+            <% @downstreams.each do |channel| %>
+                <li>
+                    [<%= @downstream_counts[channel.id] %>]
+                    <%= link_to channel.title, channel_path(channel) %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="x_panel" >
+    <div class="x_title">
+        <h2> <%= @upstream_counts.size %>  upstream <small>Channels </small></h2>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+        <ul class="list-unstyled msg_list">
+            <% @upstreams.each do |channel| %>
+                <li>
+                    [<%= @upstream_counts[channel.id] %>]
+                    <%= link_to channel.title, channel_path(channel) %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+</div>
+</div>

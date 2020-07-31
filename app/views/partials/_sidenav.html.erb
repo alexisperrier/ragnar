@@ -25,6 +25,15 @@
               <li><a href="/helms">Backend</a></li>
               <li><a href="/export">Exports</a></li>
             </ul>
+            Lists
+            <ul class="nav side-menu">
+                <% current_user.lists.each do |list| %>
+                <li>
+                    <%= link_to list.title, list %> 
+                </li>
+                <% end %>
+            </ul>
+
         </div>
 
       </div>

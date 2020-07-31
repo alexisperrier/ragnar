@@ -11,6 +11,7 @@
             <h2> <%= @channel_count %> Channels
                 <% if @export_url_csv %><small> <a href = "<%= @export_url_csv %>"> Export csv</a> </small><small><% end %>
             </h2>
+            <%= @search.to_s %>
             </div>
         </div>
     </div>
@@ -72,6 +73,10 @@
                  <br />Country: <%= channel.country %>
                  <br />Activity: <%= channel.activity %> <%= channel.activity_score %>
                  <br />Source: <%= channel.origin %>
+                 <% if channel.retrieved_at %>
+                 <br />Mis à jour: <%= channel.retrieved_at.to_date %>
+                 <% end %>
+
              </div>
              <!-- right -->
              <div class="column"  style = "  border-left: 1px dashed #999; flex: 300px; padding-left: 15px;">

@@ -1,22 +1,79 @@
 class VideosController < ApplicationController
-  before_action :set_video, only: [:show, :edit, :update, :destroy]
+    before_action :set_video, only: [:show, :edit, :update, :destroy]
+    before_action :set_search,  only: [:index]
 
-  def index
-    @recent_videos  = Video.recent.active
-    @recent_videos_count = @recent_videos.count
-    @recent_videos  = @recent_videos.order(:published_at => 'desc').page params[:page]
+    def index
+        if params[:search]
+            # search by kw
+            if @search.keyword and @search.keyword != ''
+                puts "==== @search.keyword #{@search.keyword}"
+                if @search.keyword.split().size == 1
+                    cond = " augment.tsv_lemma @@ to_tsquery('french','#{@search.keyword}') "
+                else
+                    cond = "(
+                            augment.tsv_lemma @@ plainto_tsquery('french','#{@search.keyword}')
+                            OR augment.tsv_lemma @@ websearch_to_tsquery('french','#{@search.keyword}')
+                            OR augment.tsv_lemma @@ phraseto_tsquery('french','#{@search.keyword}')
+                        )"
+                end
+                query = Video.joins(:augment,:pipeline, :category).where(cond)
+            else
+                query = Video.joins(:pipeline, :category)
+            end
 
-    # @most_viewed_video_ids  = VideoStat.where("viewed_at > ?", 1.day.ago).order(:views => 'desc').select(:video_id).limit(20).map{ |v| v.video_id }
+            puts "==== @search.status #{@search.status}"
+            if @search.status and @search.status != '--'
+                query = query.where(pipeline: {status: @search.status})
+            end
 
+            puts "==== @search.category_id #{@search.category_id}"
+            if @search.category_id.to_i > 0
+                query = query.where(category_id: @search.category_id.to_i)
+            end
 
-    respond_to do |format|
-        format.html
-        format.json
-    end
+            puts "==== @search.sort_by #{@search.sort_by} #{@search.sort_asc}"
+            if @search.sort_by
+                query = query.order("#{@search.sort_by} #{@search.sort_asc}")
+            end
+        else
+            query  = Video.recent.active
+        end
+
+        @videos  = query.preload(:pipeline, :channel, :category)
+
+        @videos_count = @videos.count
+        puts "-- before pagination"
+        @videos  = @videos.page params[:page]
+        # puts "-- after pagination video.count #{@videos.count}"
+        puts "-- get ids"
+        # vids = @videos.map{|v| v.video_id}
+        puts "-- get maxviews"
+        @maxviews = VideoStat.maxviews(@videos).sort_by {|k, v| -v}.to_h
+        puts "-- get upstream"
+        @upstream = Recommendation.upstream_counts(@videos)
+        puts "-- render"
+
+        @page_title = "YT Videos"
+
+        respond_to do |format|
+            format.html
+            format.json
+        end
 
   end
 
   def show
+      @views = @video.video_stat.order(:viewed_at).map{|s| [s.viewed_at, s.views]  }.to_h
+      upstream = @video.recommendations.group(:src_video_id).count
+      @video.upstream_count = Recommendation.where(tgt_video_id: @video.id ).count
+      @video.downstream_count = Recommendation.where(src_video_id: @video.id ).count
+
+      @upstream_channel_counts = @video.upstream_channels
+      @upstream_channels = Channel.where(channel_id: @upstream_channel_counts.keys())
+
+      @downstream_channel_counts = @video.downstream_channels
+      @downstream_channels = Channel.where(channel_id: @downstream_channel_counts.keys())
+
   end
 
   def new
@@ -61,9 +118,26 @@ class VideosController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
+   def set_search
+        if params[:search]
+            @search = VideoSearch.new(params[:search])
+        else
+            @search = VideoSearch.new({
+                status: 'active',
+                category_id: 0,
+                keyword: nil,
+                pubdate: nil,
+                sort_by:'published_at',
+                sort_asc: 'desc'
+            })
+        end
+  end
+
+
     def set_video
-      @video = Video.find(params[:id])
+      @video = Video.includes(:pipeline,:channel, :caption, :category).find(params[:id])
+      @page_title = "YT #{@video.title}"
     end
 
     # Only allow a list of trusted parameters through.

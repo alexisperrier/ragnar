@@ -6,10 +6,23 @@ class ChannelsController < ApplicationController
     def index
         if params[:search]
             query = Channel.joins(:pipeline).includes(:channel_stat)
-            if @search.status
+            if @search.status and @search.status != '--'
                 query = query.where(pipeline: {status: @search.status})
             end
-            if @search.country and @search.country != '--'
+            puts "==== @search.country #{@search.country}"
+            case @search.country
+            when "not FR"
+                puts "-- country: not FR"
+                query = query.where.not(country: ["FR",nil,''])
+            when "Null",''
+                puts "-- country: [nil,'']"
+                query = query.where(country: [nil,''] )
+                @search.country = nil
+            when 'All'
+                puts "-- country: ALL"
+                # query = query.where(country: @search.country)
+            else
+                puts "-- country: #{@search.country}"
                 query = query.where(country: @search.country)
             end
 
@@ -23,6 +36,7 @@ class ChannelsController < ApplicationController
         else
             query = Channel.active.order("#{@search.sort_by} #{@search.sort_asc}")
         end
+
         query = query.preload(:pipeline)
 
         @channel_count = query.count()
@@ -31,7 +45,7 @@ class ChannelsController < ApplicationController
         # ugly but working
         r = request.fullpath.split('?');
         @export_url_csv =  r.length > 1 ? "exports.csv?object=channels&" + r[1] : "exports.csv?object=channels"
-
+        @page_title = "YT Channels"
         respond_to do |format|
             format.html
             format.json
@@ -39,6 +53,36 @@ class ChannelsController < ApplicationController
     end
 
     def show
+        # list N most recent videos
+        @videos_count = @channel.video.count
+        @videos = @channel.video.order(:published_at => 'desc').limit(10)
+        # vids = @videos.map{|v| v.video_id}
+        @recent_maxviews = VideoStat.maxviews(@videos).sort_by {|k, v| -v}.to_h
+        @recent_upstream = Recommendation.upstream_counts(@videos)
+
+
+        @dailypub = @channel.video.where('published_at > ?', 2.month.ago).order(:pubdate).select(:pubdate).group(:pubdate).count
+
+        @views = @channel.video_stat.select(:video_id).group(:video_id).maximum(:views)
+        @views = @views.sort_by {|k, v| -v}.to_h
+        if @views.size > 200
+            @views = @views.first(200).to_h
+        end
+        if not @views.empty?
+            @avg_views = @views.values.sum() / @views.size
+        else
+            @avg_views = '--'
+        end
+
+        @most_viewed_videos = Video.find(@views.first(5).to_h.keys())
+        @mvv_maxviews = VideoStat.maxviews(@most_viewed_videos).sort_by {|k, v| -v}.to_h
+        @mvv_upstream = Recommendation.upstream_counts(@most_viewed_videos)
+
+        @downstream_counts  = @channel.downstream
+        @downstreams        = Channel.where(channel_id: @downstream_counts.keys())
+        @upstream_counts    = @channel.upstream
+        @upstreams          = Channel.where(channel_id: @upstream_counts.keys())
+
     end
 
     def edit
@@ -64,19 +108,16 @@ class ChannelsController < ApplicationController
 # ----------------------------------------------------------------------
   private
     def set_channel
-        @channel = Channel.includes(:pipeline,:channel_stat).find(params[:id])
+        @channel = Channel.includes(:pipeline,:video,:channel_stat).find(params[:id])
+        @page_title = "YT #{@channel.title}"
     end
 
     def set_search
         if params[:search]
-            @search = Search.new(params[:search])
+            @search = ChannelSearch.new(params[:search])
         else
-            @search = Search.new({status: 'active', country: 'FR', sort_by:'title', sort_asc: 'asc' })
+            @search = ChannelSearch.new({status: 'active', country: 'FR', sort_by:'retrieved_at', sort_asc: 'desc' })
         end
-        puts "--"*20
-        puts "search: "
-        puts @search.inspect
-        puts "--"*20
     end
 
     def channel_params

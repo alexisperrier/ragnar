@@ -2,7 +2,11 @@
     <a href="https://www.youtube.com/watch?v=<%= video.video_id %>" target="_blank"><img src ="<%= video.thumbnail %>" width=120px></a>
 
     <div style='width:100%; float:left; display:inline;'>
+        <% if video.title %>
         <a href="/videos/<%= video.video_id %>"><%= video.title.truncate(50) %></a>
+        <% else %>
+        <a href="/videos/<%= video.video_id %>">---</a>
+        <% end %>
 
     <div>
         <div>
@@ -15,18 +19,23 @@
         </div>
 
         <div >
-        <% if video.category %>
-            <%= video.category.category %>
-        <% end %>
-        <% if video.maxviews %>
-            <span style="float:right; text-align:right;"><%= video.maxviews %> vues</span>
-        <% end %>
+            <% if video.category %>
+                <%= video.category.category %>
+            <% end %>
+
+            <% if maxviews[video.video_id] %>
+                <span style="float:right; text-align:right;"><%= number_with_delimiter maxviews[video.video_id] %> vues</span>
+            <% end %>
         </div>
+
         <div>
-        video.reco_count
-        <% if video.seconds %>
-            <span style="float:right; text-align:right;"><%= video.seconds %>s</span>
-        <% end %>
+            <% if upstream[video.video_id] %>
+                <%= number_with_delimiter upstream[video.video_id] %> recommendations
+            <% end %>
+
+            <% if video.seconds %>
+                <span style="float:right; text-align:right;"><%= video.seconds %>s</span>
+            <% end %>
         </div>
 
 

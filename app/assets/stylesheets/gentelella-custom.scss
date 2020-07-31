@@ -1347,16 +1347,16 @@ div.box {
     background-color: #E5E5FF
 }
 ul.msg_list li {
-    background: #f7f7f7;
+    background: #FFF;
     padding: 5px;
     display: -ms-flexbox;
     display: flex;
-    margin: 6px 6px 0;
-    width: 96% !important
+    margin: 0px 0px 0;
+    width: 100% !important
 }
 ul.msg_list li:last-child {
     margin-bottom: 6px;
-    padding: 10px
+    padding: 5px
 }
 ul.msg_list li a {
     padding: 3px 5px !important

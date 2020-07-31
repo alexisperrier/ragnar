@@ -1,109 +1,90 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Id:</strong>
-  <%= @video.id %>
-</p>
+<div class="row">
+    <div class="col-md-3">
+    <div class="x_panel tile ">
+        <div class="x_title">
+            <h3> <%= @video.title %></h3>
+            <div class="clearfix"></div>
+        </div>
+    <div class="x_content" style = "width:300px; ">
+        <% if @video.thumbnail %>
+        <%= image_tag @video.thumbnail, width: '300'  %>
+        <% end %>
+        <strong><%= link_to @video.channel.title, channel_path(@video.channel) %></strong>
+        <ul>
+            <li><strong>Status:</strong> <%= @video.pipeline.status %></li>
+            <li><strong>Origin:</strong> <%= @video.origin %></li>
+            <li><strong>Categorie:</strong> <%= @video.category.category %></li>
+        </ul>
+    <p>
+      <%= @video.summary %>
+    </p>
+    <div>
+    <%= link_to 'Edit', edit_video_path(@video) %> -
+    <span style= "float:right;">
+        <a href='https://www.youtube.com/watch?v=<%= @video.video_id %>' target=_blank><%= @video.video_id %></a>
+    </span>
+    </div>
+    </div>
 
-<p>
-  <strong>Video:</strong>
-  <%= @video.video %>
-</p>
 
-<p>
-  <strong>Channel:</strong>
-  <%= @video.channel %>
-</p>
 
-<p>
-  <strong>Title:</strong>
-  <%= @video.title %>
-</p>
+</div>
+</div>
 
-<p>
-  <strong>Summary:</strong>
-  <%= @video.summary %>
-</p>
 
-<p>
-  <strong>Thumbnail:</strong>
-  <%= @video.thumbnail %>
-</p>
+    <div class="col-md-3">
+        <div class="x_content">
+                <div class="image view view-first">
+                    <% if @views %>
+                        <%= line_chart @views %>
+                    <% end %>
+                </div>
+          </div>
+    </div>
+</div>
 
-<p>
-  <strong>Category:</strong>
-  <%= @video.category %>
-</p>
+<div class="col-md-3">
+    <div class="x_panel" >
+        <div class="x_title">
+            <h2> <%= @video.upstream_count %> Upstream</h2>
+            <div class="clearfix"></div>
+        </div>
+        <% if @upstream_channels %>
+        <div class="x_content">
+            <ul class="list-unstyled msg_list">
+                <% @upstream_channels.each do |channel| %>
+                    <li>
+                        [<%= @upstream_channel_counts[channel.id] %>]
+                        <%= link_to channel.title, channel_path(channel) %>
+                    </li>
 
-<p>
-  <strong>Duration:</strong>
-  <%= @video.duration %>
-</p>
+                <% end %>
+            </ul>
+        </div>
+        <% end %>
+    </div>
+</div>
 
-<p>
-  <strong>Privacy status:</strong>
-  <%= @video.privacy_status %>
-</p>
+<div class="col-md-3">
+    <div class="x_panel" >
+        <div class="x_title">
+            <h2> <%= @video.downstream_count %> Downstream</h2>
+            <div class="clearfix"></div>
+        </div>
+        <% if @downstream_channels %>
+        <div class="x_content">
+            <ul class="list-unstyled msg_list">
+                <% @downstream_channels.each do |channel| %>
+                    <li>
+                        [<%= @downstream_channel_counts[channel.id] %>]
+                        <%= link_to channel.title, channel_path(channel) %>
+                    </li>
 
-<p>
-  <strong>Caption:</strong>
-  <%= @video.caption %>
-</p>
-
-<p>
-  <strong>Published at:</strong>
-  <%= @video.published_at %>
-</p>
-
-<p>
-  <strong>Retrieved at:</strong>
-  <%= @video.retrieved_at %>
-</p>
-
-<p>
-  <strong>Tags:</strong>
-  <%= @video.tags %>
-</p>
-
-<p>
-  <strong>Origin:</strong>
-  <%= @video.origin %>
-</p>
-
-<p>
-  <strong>Footer:</strong>
-  <%= @video.footer %>
-</p>
-
-<p>
-  <strong>Pubdate:</strong>
-  <%= @video.pubdate %>
-</p>
-
-<p>
-  <strong>Live content:</strong>
-  <%= @video.live_content %>
-</p>
-
-<p>
-  <strong>Default audio language:</strong>
-  <%= @video.default_audio_language %>
-</p>
-
-<p>
-  <strong>Default language:</strong>
-  <%= @video.default_language %>
-</p>
-
-<p>
-  <strong>Seconds:</strong>
-  <%= @video.seconds %>
-</p>
-
-<p>
-  <strong>Wikitopics:</strong>
-  <%= @video.wikitopics %>
-</p>
-
-<%= link_to 'Edit', edit_video_path(@video) %> |
-<%= link_to 'Back', videos_path %>
+                <% end %>
+            </ul>
+        </div>
+        <% end %>
+    </div>
+</div>
