@@ -2,17 +2,11 @@
 # see https://guides.rubyonrails.org/routing.html
 
 Rails.application.routes.draw do
-  get 'lists/index'
-  get 'lists/show'
-  get 'lists/edit'
-  get 'lists/update'
-  get 'lists/new'
-  get 'lists/destroy'
     root to: "welcome#index"
     get 'welcome/index'
-    resources :videos
-    resources :lists
     devise_for :users
+    resources :collections
+    resources :videos
     resources :helms
     resources :channels
     resources :exports

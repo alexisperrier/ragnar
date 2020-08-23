@@ -4,11 +4,11 @@ class Video < ApplicationRecord
     self.table_name     = 'video'
     belongs_to  :channel
     belongs_to  :category
+    belongs_to  :collection
     has_one     :pipeline
     has_one     :augment
     has_many    :video_stat
     has_many    :recommendations, foreign_key: 'tgt_video_id'
-    # has_many    :recommender, foreign_key: 'tgt_video_id'
     has_one     :caption
     accepts_nested_attributes_for :pipeline
 

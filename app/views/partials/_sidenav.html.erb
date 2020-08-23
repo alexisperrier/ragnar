@@ -14,7 +14,7 @@
       <!-- /menu profile quick info -->
 
       <br />
-
+      <% if current_user%>
       <!-- sidebar menu -->
       <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 
@@ -25,18 +25,20 @@
               <li><a href="/helms">Backend</a></li>
               <li><a href="/export">Exports</a></li>
             </ul>
-            Lists
+            Collections
             <ul class="nav side-menu">
-                <% current_user.lists.each do |list| %>
+                <% current_user.collections.each do |col| %>
                 <li>
-                    <%= link_to list.title, list %> 
+                    <%= link_to col.title, col %>
                 </li>
                 <% end %>
             </ul>
+            <%= link_to 'New Collection', new_collection_path %>
 
         </div>
 
       </div>
+      <% end %>
       <!-- /sidebar menu -->
 
     </div>

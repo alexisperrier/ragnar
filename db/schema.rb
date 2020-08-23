@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_31_134642) do
+ActiveRecord::Schema.define(version: 2020_08_23_071857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -71,6 +71,14 @@ ActiveRecord::Schema.define(version: 2020_07_31_134642) do
     t.index ["channel_id"], name: "channel_stat_channel_id", unique: true
   end
 
+  create_table "collections", force: :cascade do |t|
+    t.string "title"
+    t.string "description"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "exp_related_videos_01", id: false, force: :cascade do |t|
     t.serial "id", null: false
     t.integer "source_id"
@@ -114,15 +122,6 @@ ActiveRecord::Schema.define(version: 2020_07_31_134642) do
     t.integer "count_", default: 0, null: false
     t.datetime "created_at", default: -> { "now()" }
     t.index ["jobname"], name: "helm_jobname"
-  end
-
-  create_table "lists", force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_lists_on_user_id"
   end
 
   create_table "origin", id: false, force: :cascade do |t|
