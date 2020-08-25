@@ -2,13 +2,16 @@ class Video < ApplicationRecord
     require 'csv'
     self.primary_key    = 'video_id'
     self.table_name     = 'video'
-    belongs_to  :channel
-    belongs_to  :category
-    belongs_to  :collection
+    belongs_to  :channel, optional: true
+    belongs_to  :category, optional: true
+    belongs_to  :collection, optional: true
     has_one     :pipeline
     has_one     :augment
     has_many    :video_stat
     has_many    :recommendations, foreign_key: 'tgt_video_id'
+    has_many    :colvids
+    has_many    :collections, through: :colvids
+    has_many    :searches, through: :colvids
     has_one     :caption
     accepts_nested_attributes_for :pipeline
 

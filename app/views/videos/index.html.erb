@@ -1,23 +1,25 @@
 <p id="notice"><%= notice %></p>
 <%= render 'search_form', search: @search %>
-
+<%= render 'add_video', video: @video %>
 <div >
+    <!-- placeholder for exports and add to collections -->
     <div class="row">
         <div class="x_panel tile ">
             <div class="x_title">
-            <h2> <%= @video_count %> Videos
-                <% if @export_url_csv %><small> <a href = "<%= @export_url_csv %>"> Export csv</a> </small><small><% end %>
-            </h2>
+                <% if @export_url_csv %>
+                    <small> <a href = "<%= @export_url_csv %>"> Export csv</a> </small>
+                <% end %>
+                <%= render partial: "videos/add_to_collections" %>
             </div>
         </div>
     </div>
-
+    <!-- placeholder for charts -->
     <div class="row">
         <div class="col-md-3">
         <div class="x_content">
         <div class="image view view-first">
         <% if @activity %>
-        <%= bar_chart @activity %>
+            <%= bar_chart @activity %>
         <% end %>
         </div>
         </div>
@@ -26,7 +28,7 @@
         <div class="x_content">
         <div class="image view view-first">
         <% if @activity %>
-        <%= column_chart @activity_score %>
+            <%= column_chart @activity_score %>
         <% end %>
         </div>
         </div>
@@ -50,3 +52,5 @@
             </div>
         </div>
 </div>
+
+<%= link_to "New Video", new_video_path %>

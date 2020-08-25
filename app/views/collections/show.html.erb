@@ -10,5 +10,11 @@
   <%= @collection.description %>
 </p>
 
+<ul class="list-unstyled msg_list">
+<% @videos.each do |video| %>
+    <%= render 'videos/video_liste', video: video  %>
+<% end %>
+</ul>
+
 <%= link_to 'Edit', edit_collection_path(@collection) %> |
 <%= link_to 'Back', collections_path %>

@@ -23,14 +23,18 @@
                 <%= video.category.category %>
             <% end %>
 
+            <% if maxviews.present?  %>
             <% if maxviews[video.video_id] %>
                 <span style="float:right; text-align:right;"><%= number_with_delimiter maxviews[video.video_id] %> vues</span>
+            <% end %>
             <% end %>
         </div>
 
         <div>
+            <% if upstream.present?  %>
             <% if upstream[video.video_id] %>
                 <%= number_with_delimiter upstream[video.video_id] %> recommendations
+            <% end %>
             <% end %>
 
             <% if video.seconds %>

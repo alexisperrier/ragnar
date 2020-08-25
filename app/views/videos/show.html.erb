@@ -15,7 +15,11 @@
         <ul>
             <li><strong>Status:</strong> <%= @video.pipeline.status %></li>
             <li><strong>Origin:</strong> <%= @video.origin %></li>
-            <li><strong>Categorie:</strong> <%= @video.category.category %></li>
+            <li><strong>Categorie:</strong>
+                <% if @video.category %>
+                    <%= @video.category.category %>
+                <% end %>
+            </li>
         </ul>
     <p>
       <%= @video.summary %>

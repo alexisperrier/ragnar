@@ -1,15 +1,19 @@
 class CollectionsController < ApplicationController
   before_action :set_collection, only: [:show, :edit, :update, :destroy]
 
-  # GET /collections
-  # GET /collections.json
+
+
   def index
     @collections = current_user.collections.all
+
+    @page_title = "Collections"
   end
 
   # GET /collections/1
   # GET /collections/1.json
   def show
+      @page_title = @collection.title
+      @videos = @collection.videos.preload(:channel, :colvids => :search).joins(:channel, :colvids => :search).order("channel.title asc")
   end
 
   # GET /collections/new
@@ -26,7 +30,7 @@ class CollectionsController < ApplicationController
   def create
     @collection = Collection.new(collection_params)
     @collection.user = current_user
-    
+
     respond_to do |format|
       if @collection.save
         format.html { redirect_to @collection, notice: 'Collection was successfully created.' }

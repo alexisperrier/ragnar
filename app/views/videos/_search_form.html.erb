@@ -3,7 +3,7 @@
     Category <%= form.select :category_id, options_for_select( Category::CAT_SELECT, search.category_id) %>
     Keyword <%= form.text_field :keyword %>
 
-    Order by <%= form.select :sort_by, options_for_select(['title','published_at'], search.sort_by) %>
+    Order by <%= form.select :sort_by, options_for_select(['--','title','published_at'], search.sort_by) %>
     <%= form.select :sort_asc, options_for_select(['asc','desc'], search.sort_asc) %>
     <input type="submit" name="commit" value="Search">
 <% end %>

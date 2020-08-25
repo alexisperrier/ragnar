@@ -25,15 +25,24 @@
               <li><a href="/helms">Backend</a></li>
               <li><a href="/export">Exports</a></li>
             </ul>
-            Collections
-            <ul class="nav side-menu">
+          </div>
+          <div class="menu_section">
+              <ul class="nav side-menu">
+                <li><%= link_to 'Collections', collections_path %>
+                <ul class="nav child-menu">
                 <% current_user.collections.each do |col| %>
-                <li>
-                    <%= link_to col.title, col %>
+                <li style = "color: #FFF">
+                    <%= link_to "#{col.videos.count} #{col.title}" , col %>
+
                 </li>
                 <% end %>
-            </ul>
+                </ul>
+            </li>
+            <li>
             <%= link_to 'New Collection', new_collection_path %>
+            </li>
+            </ul>
+
 
         </div>
 

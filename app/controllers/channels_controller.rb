@@ -2,6 +2,27 @@ class ChannelsController < ApplicationController
     before_action :set_channel, only: [:show, :edit, :update]
     before_action :set_search,  only: [:index]
 
+    def new
+      @channel = Channel.new
+    end
+
+    def create
+
+        if Channel.find(channel_params['channel_id']).nil?
+            @channel = Channel.create(channel_params)
+            @pipeline = Pipeline.create({channel_id: @channel.id})
+            respond_to do |format|
+                format.html { redirect_to @channel, notice: 'channel was successfully created.' }
+                format.json { render :show, status: :created, location: @channel }
+            end
+        else
+            @channel = Channel.find(channel_params['channel_id']).nil?
+            respond_to do |format|
+                format.html { redirect_to channels_path, notice: 'channel already exists'  }
+                format.json { render :show, status: :created, location: @channel }
+            end
+        end
+    end
 
     def index
         if params[:search]
@@ -46,6 +67,7 @@ class ChannelsController < ApplicationController
         r = request.fullpath.split('?');
         @export_url_csv =  r.length > 1 ? "exports.csv?object=channels&" + r[1] : "exports.csv?object=channels"
         @page_title = "YT Channels"
+        @channel = Channel.new
         respond_to do |format|
             format.html
             format.json
@@ -124,7 +146,7 @@ class ChannelsController < ApplicationController
         # Only allow a list of trusted parameters through.
         params.require(:channel).permit(:title,
             :description, :country, :origin,
-            :activity, :rss_next_parsing,
+            :activity, :rss_next_parsing, :channel_id
             # Uncomment this to update using @channel.update(channel_params)
             # so far not working losing the id field in the sql pipeline_attributes: [:status, :id]
         )

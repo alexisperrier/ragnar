@@ -1,0 +1,8 @@
+<div style = "float:right; display:inline">
+
+<%= form_with url: colvids_addtocollection_path do |form| %>
+    <%= form.select :collection_id, options_for_select(current_user.collections.map{|c|  [c.title,c.id]}.unshift(["-- collections", 0])) %>
+    <input type="hidden" name="search_params" value = "<%= params.to_param %>">
+    <%= form.submit "Add" %>
+<% end %>
+</div>

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  query: MyString
+  user: one
+  collection: one
+  keywords: MyString
+  'on': MyString
+
+two:
+  query: MyString
+  user: two
+  collection: two
+  keywords: MyString
+  'on': MyString

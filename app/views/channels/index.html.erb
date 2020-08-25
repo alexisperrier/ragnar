@@ -2,6 +2,7 @@
 
 <!-- search form -->
 <%= render 'search_form', search: @search %>
+<%= render 'add_channel', channel: @channel %>
 
 <div >
     <div class="row">
@@ -102,3 +103,4 @@
 </div>
 </div>
 </div>
+<%= link_to "New Channel", new_channel_path %>

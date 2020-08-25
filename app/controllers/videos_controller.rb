@@ -5,6 +5,16 @@ class VideosController < ApplicationController
     def index
         if params[:search]
             # search by kw
+            query = Video
+            puts "==== @search.status #{@search.status}"
+            if @search.status and @search.status != '--'
+                query = query.joins(:pipeline).where(pipeline: {status: @search.status})
+            end
+            puts "==== @search.category_id #{@search.category_id}"
+            if @search.category_id.to_i > 0
+                query = query.where(category_id: @search.category_id.to_i)
+            end
+
             if @search.keyword and @search.keyword != ''
                 puts "==== @search.keyword #{@search.keyword}"
                 if @search.keyword.split().size == 1
@@ -16,44 +26,21 @@ class VideosController < ApplicationController
                             OR augment.tsv_lemma @@ phraseto_tsquery('french','#{@search.keyword}')
                         )"
                 end
-                query = Video.joins(:augment,:pipeline, :category).where(cond)
-            else
-                query = Video.joins(:pipeline, :category)
+                query = query.joins(:augment).where(cond)
             end
 
-            puts "==== @search.status #{@search.status}"
-            if @search.status and @search.status != '--'
-                query = query.where(pipeline: {status: @search.status})
-            end
-
-            puts "==== @search.category_id #{@search.category_id}"
-            if @search.category_id.to_i > 0
-                query = query.where(category_id: @search.category_id.to_i)
-            end
-
-            puts "==== @search.sort_by #{@search.sort_by} #{@search.sort_asc}"
-            if @search.sort_by
+            if @search.sort_by and @search.sort_by != '--'
                 query = query.order("#{@search.sort_by} #{@search.sort_asc}")
             end
         else
             query  = Video.recent.active
         end
 
-        @videos  = query.preload(:pipeline, :channel, :category)
-
-        @videos_count = @videos.count
-        puts "-- before pagination"
-        @videos  = @videos.page params[:page]
-        # puts "-- after pagination video.count #{@videos.count}"
-        puts "-- get ids"
-        # vids = @videos.map{|v| v.video_id}
-        puts "-- get maxviews"
-        @maxviews = VideoStat.maxviews(@videos).sort_by {|k, v| -v}.to_h
-        puts "-- get upstream"
-        @upstream = Recommendation.upstream_counts(@videos)
-        puts "-- render"
-
-        @page_title = "YT Videos"
+        @videos_count   = query.count
+        query           = query.page params[:page]
+        @videos         = query.preload(:pipeline, :channel, :category)
+        @page_title     = "YT Videos"
+        @video          = Video.new
 
         respond_to do |format|
             format.html
@@ -84,17 +71,20 @@ class VideosController < ApplicationController
   end
 
   def create
-    @video = Video.new(video_params)
-
-    respond_to do |format|
-      if @video.save
-        format.html { redirect_to @video, notice: 'Video was successfully created.' }
-        format.json { render :show, status: :created, location: @video }
+      if Video.find(video_params['video_id']).nil?
+          @video = Video.create(video_params)
+          @pipeline = Pipeline.create({video_id: @video.id})
+          respond_to do |format|
+              format.html { redirect_to @video, notice: 'video was successfully created.' }
+              format.json { render :show, status: :created, location: @video }
+          end
       else
-        format.html { render :new }
-        format.json { render json: @video.errors, status: :unprocessable_entity }
+          @video = Video.find(video_params['video_id']).nil?
+          respond_to do |format|
+              format.html { redirect_to videos_path, notice: 'video already exists'  }
+              format.json { render :show, status: :created, location: @video }
+          end
       end
-    end
   end
 
   def update
@@ -128,7 +118,7 @@ class VideosController < ApplicationController
                 category_id: 0,
                 keyword: nil,
                 pubdate: nil,
-                sort_by:'published_at',
+                sort_by:'--',
                 sort_asc: 'desc'
             })
         end

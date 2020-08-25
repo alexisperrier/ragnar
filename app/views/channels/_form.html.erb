@@ -11,6 +11,13 @@
     </div>
   <% end %>
 
+  <% if @channel.id.nil? %>
+      <div class="field">
+        <%= form.label :id %>
+        <%= form.text_field :channel_id %>
+      </div>
+  <% end %>
+
   <h2><%= channel.title %></h2>
 
   <%= form.fields_for :pipeline, @channel.pipeline do |pp_form| %>

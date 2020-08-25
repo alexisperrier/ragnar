@@ -4,8 +4,8 @@ class Channel < ApplicationRecord
     self.table_name = 'channel'
     has_one :pipeline
     accepts_nested_attributes_for :pipeline
-    has_one :channel_stat
-    has_one :topic
+    has_one  :channel_stat
+    has_one  :topic
     has_many :video
     has_many :video_stat, through: :video
     has_many :related_channel
@@ -97,8 +97,8 @@ class Channel < ApplicationRecord
             csv << channel_row + pipeline_row + stat_row
           end
         end
-      end
+     end
 
-    belongs_to :channel
+    # belongs_to :channel
 
 end

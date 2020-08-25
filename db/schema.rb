@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_23_071857) do
+ActiveRecord::Schema.define(version: 2020_08_25_085514) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -77,6 +77,17 @@ ActiveRecord::Schema.define(version: 2020_08_23_071857) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "colvids", force: :cascade do |t|
+    t.bigint "collection_id"
+    t.string "video_id", limit: 11
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "search_id"
+    t.index ["collection_id"], name: "index_colvids_on_collection_id"
+    t.index ["search_id"], name: "index_colvids_on_search_id"
+    t.index ["video_id", "collection_id"], name: "index_colvids_on_video_id_and_collection_id", unique: true
   end
 
   create_table "exp_related_videos_01", id: false, force: :cascade do |t|
@@ -214,6 +225,16 @@ ActiveRecord::Schema.define(version: 2020_08_23_071857) do
     t.index ["src_video_id"], name: "related_videos_export_src_video_id_idx"
   end
 
+  create_table "searches", force: :cascade do |t|
+    t.json "query"
+    t.bigint "collection_id"
+    t.string "keywords"
+    t.string "on"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collection_id"], name: "index_searches_on_collection_id"
+  end
+
   create_table "timer", id: false, force: :cascade do |t|
     t.serial "id", null: false
     t.string "video_id", limit: 11
@@ -270,6 +291,7 @@ ActiveRecord::Schema.define(version: 2020_08_23_071857) do
     t.string "default_language"
     t.integer "seconds"
     t.string "wikitopics"
+    t.index ["category_id"], name: "index_video_on_category_id"
     t.index ["channel_id"], name: "idx_video_channel_id"
     t.index ["origin"], name: "video_origin"
     t.index ["published_at"], name: "video_published_at"
