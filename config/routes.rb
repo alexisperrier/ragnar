@@ -3,9 +3,9 @@
 
 Rails.application.routes.draw do
   resources :searches
-    get 'colvids/index'
-    get 'colvids/edit'
-    post 'colvids/addtocollection'
+    get 'collection_items/index'
+    get 'collection_items/edit'
+    post 'collection_items/addtocollection'
     root to: "welcome#index"
     get 'welcome/index'
     devise_for :users

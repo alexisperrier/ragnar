@@ -1,4 +1,4 @@
 class Search < ApplicationRecord
   belongs_to :collection
-  has_many :colvids
+  has_many :collection_items
 end

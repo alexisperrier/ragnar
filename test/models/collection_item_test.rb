@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ColvidTest < ActiveSupport::TestCase
+class CollectionItemTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

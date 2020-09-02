@@ -13,7 +13,7 @@ class CollectionsController < ApplicationController
   # GET /collections/1.json
   def show
       @page_title = @collection.title
-      @videos = @collection.videos.preload(:channel, :colvids => :search).joins(:channel, :colvids => :search).order("channel.title asc")
+      @videos = @collection.videos.preload(:channel, :collection_items => :search).joins(:channel, :collection_items => :search).order("channel.title asc").limit(100)
   end
 
   # GET /collections/new

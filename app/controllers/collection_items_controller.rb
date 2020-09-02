@@ -1,4 +1,4 @@
-class ColvidsController < ApplicationController
+class CollectionItemsController < ApplicationController
 
     def addtocollection
         if (params['collection_id'] == 0)
@@ -42,8 +42,8 @@ class ColvidsController < ApplicationController
             })
 
 
-        # -- add search_id to colvids
-        insert_sql = " insert into colvids (video_id, collection_id, search_id, created_at, updated_at)  values "
+        # -- add search_id to collection_items
+        insert_sql = " insert into collection_items (video_id, collection_id, search_id, created_at, updated_at)  values "
         video_ids.each do |video_id|
             sql = insert_sql + " ('#{video_id}',#{params['collection_id']}, #{src.id}, now(), now())  on conflict (video_id,collection_id) DO NOTHING; "
             results = ActiveRecord::Base.connection.execute(sql)

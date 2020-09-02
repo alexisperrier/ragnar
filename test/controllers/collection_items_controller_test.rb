@@ -1,13 +1,13 @@
 require 'test_helper'
 
-class ColvidsControllerTest < ActionDispatch::IntegrationTest
+class CollectionItemsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
-    get colvids_index_url
+    get collection_items_index_url
     assert_response :success
   end
 
   test "should get edit" do
-    get colvids_edit_url
+    get collection_items_edit_url
     assert_response :success
   end
 

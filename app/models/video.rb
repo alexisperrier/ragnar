@@ -9,9 +9,9 @@ class Video < ApplicationRecord
     has_one     :augment
     has_many    :video_stat
     has_many    :recommendations, foreign_key: 'tgt_video_id'
-    has_many    :colvids
-    has_many    :collections, through: :colvids
-    has_many    :searches, through: :colvids
+    has_many    :collection_items
+    has_many    :collections, through: :collection_items
+    has_many    :searches, through: :collection_items
     has_one     :caption
     accepts_nested_attributes_for :pipeline
 

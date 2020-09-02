@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_29_130403) do
+ActiveRecord::Schema.define(version: 2020_09_02_070456) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -71,23 +71,23 @@ ActiveRecord::Schema.define(version: 2020_08_29_130403) do
     t.index ["channel_id"], name: "channel_stat_channel_id", unique: true
   end
 
+  create_table "collection_items", force: :cascade do |t|
+    t.bigint "collection_id"
+    t.string "video_id", limit: 11
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "search_id"
+    t.index ["collection_id"], name: "index_collection_items_on_collection_id"
+    t.index ["search_id"], name: "index_collection_items_on_search_id"
+    t.index ["video_id", "collection_id"], name: "index_collection_items_on_video_id_and_collection_id", unique: true
+  end
+
   create_table "collections", force: :cascade do |t|
     t.string "title"
     t.string "description"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "colvids", force: :cascade do |t|
-    t.bigint "collection_id"
-    t.string "video_id", limit: 11
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "search_id"
-    t.index ["collection_id"], name: "index_colvids_on_collection_id"
-    t.index ["search_id"], name: "index_colvids_on_search_id"
-    t.index ["video_id", "collection_id"], name: "index_colvids_on_video_id_and_collection_id", unique: true
   end
 
   create_table "exp_related_videos_01", id: false, force: :cascade do |t|
