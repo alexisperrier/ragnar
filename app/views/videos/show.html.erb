@@ -7,10 +7,12 @@
             <h3> <%= @video.title %></h3>
             <div class="clearfix"></div>
         </div>
-    <div class="x_content" style = "width:300px; ">
+    <div class="x_content" ">
+        <div style = "width:300px; float:left; display:inline; margin-right: 10px;">
         <% if @video.thumbnail %>
         <%= image_tag @video.thumbnail, width: '300'  %>
         <% end %>
+        </div>
         <strong><%= link_to @video.channel.title, channel_path(@video.channel) %></strong>
         <ul>
             <li><strong>Status:</strong> <%= @video.pipeline.status %></li>
@@ -20,15 +22,34 @@
                     <%= @video.category.category %>
                 <% end %>
             </li>
+            <li><strong>Youtube:</strong>
+                    <a href='https://www.youtube.com/watch?v=<%= @video.video_id %>' target=_blank><%= @video.video_id %></a>
+
+            </li>
         </ul>
-    <p>
-      <%= @video.summary %>
-    </p>
+        <p>
+          <%= @video.summary %>
+        </p>
+
+    <div>
+        <%#= render "add_to_collections", video: @video %>
+        <% if not @video.collections.empty? %>
+        <p> <strong>This video belongs to collections:  </strong></p>
+        <ul>
+            <% @video.collections.each do |collection| %>
+            <li>
+                <%= link_to collection.title, collection_path(collection) %>
+            <% end %>
+            </li>
+        </ul>
+        <% end %>
+
+
+    </div>
+
+
     <div>
     <%= link_to 'Edit', edit_video_path(@video) %> -
-    <span style= "float:right;">
-        <a href='https://www.youtube.com/watch?v=<%= @video.video_id %>' target=_blank><%= @video.video_id %></a>
-    </span>
     </div>
     </div>
 

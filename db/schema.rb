@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_02_070456) do
+ActiveRecord::Schema.define(version: 2020_09_02_072452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -77,6 +77,9 @@ ActiveRecord::Schema.define(version: 2020_09_02_070456) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "search_id"
+    t.string "channel_id"
+    t.index ["channel_id", "collection_id"], name: "index_collection_items_on_channel_id_and_collection_id", unique: true
+    t.index ["channel_id"], name: "index_collection_items_on_channel_id", unique: true
     t.index ["collection_id"], name: "index_collection_items_on_collection_id"
     t.index ["search_id"], name: "index_collection_items_on_search_id"
     t.index ["video_id", "collection_id"], name: "index_collection_items_on_video_id_and_collection_id", unique: true

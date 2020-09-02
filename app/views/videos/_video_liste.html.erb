@@ -1,8 +1,15 @@
 <li style = "background: <%= cycle('#f7f7f7', '#FFF') -%>;">
 
     <div style='width:100%; '>
+        <%= link_to video.video_id, video_path(video.video_id) %>
         <% if video.channel %>
-            <a href="/channels/<%= video.channel_id %>"><strong><%= video.channel.title %></strong></a>
+            <a href="/channels/<%= video.channel_id %>"><strong>
+                <% if video.channel.title %>
+                    <%= video.channel.title %>
+                <% else %>
+                    <%= video.channel_id %>
+                <% end %>
+            </strong></a>
         <% end %>
         <% if video.title %>
             <a href="/videos/<%= video.video_id %>"><%= video.title.truncate(100) %></a>

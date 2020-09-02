@@ -8,6 +8,7 @@
       <th>Title</th>
       <th>Description</th>
       <th># Videos</th>
+      <th># Channels</th>
       <th colspan="2"></th>
     </tr>
   </thead>
@@ -18,6 +19,7 @@
         <td><%= link_to collection.title, collection %></td>
         <td><%= collection.description %></td>
         <td><%= collection.videos.count %></td>
+        <td><%= collection.channels.count %></td>
         <td><%= link_to 'Edit', edit_collection_path(collection) %></td>
         <td><%= link_to 'Destroy', collection, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

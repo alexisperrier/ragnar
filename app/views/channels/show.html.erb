@@ -26,6 +26,17 @@
                     <li>Subscribers: <%= @channel.try(:channel_stat).try(:subscribers) %></li>
                 </ul>
 
+                <%= render "add_to_collections", channel: @channel %>
+                <% if not @channel.collections.empty? %>
+                <p> This channel belongs to collections:
+                    <% @channel.collections.each do |collection| %>
+                        <%= link_to collection.title, collection_path(collection) %>
+                    <% end %>
+                </p>
+                <% end %>
+
+
+
                 <% if @channel.thumbnail %>
                 <%= image_tag @channel.thumbnail %>
                 <% end %>

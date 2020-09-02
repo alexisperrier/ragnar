@@ -9,7 +9,10 @@ class Channel < ApplicationRecord
     has_many :video
     has_many :video_stat, through: :video
     has_many :related_channel
-
+    has_many    :collection_items
+    has_many    :collections, through: :collection_items
+    belongs_to  :collection, optional: true
+    
     scope :active, -> {  includes(:channel_stat).joins(:pipeline).where("pipeline.status = 'active'").where(country: "FR").preload(:pipeline)  }
 
     ACTIVITIES = ["frenetic", "energised", "active", "steady", "sluggish", "asleep", "cold"]

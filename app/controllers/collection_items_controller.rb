@@ -1,6 +1,30 @@
 class CollectionItemsController < ApplicationController
 
-    def addtocollection
+    def addchannel
+        channel_id = params["channel_id"].to_s[0..23]
+        if channel_id.length !=24
+            redirect_to channels_path, notice: "This channel_id is not valid"
+            return
+        end
+        if Channel.find(channel_id).nil?
+            redirect_to channels_path, notice: "This channel does not exist"
+            return
+        end
+
+
+        sql = " insert into collection_items
+            (channel_id, collection_id, created_at, updated_at)
+            values
+            ('#{channel_id}',#{params['collection_id']}, now(), now())
+            on conflict (channel_id,collection_id) DO NOTHING; "
+
+        results = ActiveRecord::Base.connection.execute(sql)
+
+        redirect_to channel_path(channel_id), notice: "The channel was added to the collection" 
+
+    end
+
+    def addvideos
         if (params['collection_id'] == 0)
             redirect_to videos_path + "?" + params["search_params"]
             return

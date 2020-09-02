@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   resources :searches
     get 'collection_items/index'
     get 'collection_items/edit'
-    post 'collection_items/addtocollection'
+    post 'collection_items/addvideos'
+    post 'collection_items/addchannel'
     root to: "welcome#index"
     get 'welcome/index'
     devise_for :users
