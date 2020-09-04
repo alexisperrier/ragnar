@@ -14,7 +14,8 @@ class CollectionsController < ApplicationController
   def show
       @page_title = @collection.title
       @channels = @collection.channels.preload(:collection_items).joins(:collection_items).order("title asc").limit(100)
-      @videos = @collection.videos.preload(:channel, :collection_items => :search).joins(:channel, :collection_items => :search).order("channel.title asc").limit(100)
+      query = @collection.videos.joins(:channel, :collection_items => :search).order("channel.title asc").page params[:page]
+      @videos = query.preload(:channel, :collection_items => :search)
   end
 
   # GET /collections/new

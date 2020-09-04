@@ -2,6 +2,7 @@
 
 <%= form_with url: collection_items_addvideos_path do |form| %>
     <%= form.select :collection_id, options_for_select(current_user.collections.map{|c|  [c.title,c.id]}.unshift(["-- collections", 0])) %>
+    <input type="hidden" name="origin" value = "search">
     <input type="hidden" name="search_params" value = "<%= params.to_param %>">
     <%= form.submit "Add" %>
 <% end %>

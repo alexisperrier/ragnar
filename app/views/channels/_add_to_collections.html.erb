@@ -2,6 +2,7 @@
 
 <%= form_with url: collection_items_addchannel_path do |form| %>
     <input type="hidden" name="channel_id" value = "<%= channel.channel_id %>">
+    <input type="hidden" name="origin" value = "manual">
     <%= form.select :collection_id, options_for_select(current_user.collections.map{|c|  [c.title,c.id]}.unshift(["-- collections", 0])) %>
     <%= form.submit "Add" %>
 <% end %>

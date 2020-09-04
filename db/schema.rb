@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_02_072452) do
+ActiveRecord::Schema.define(version: 2020_09_04_132843) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -78,8 +78,9 @@ ActiveRecord::Schema.define(version: 2020_09_02_072452) do
     t.datetime "updated_at", null: false
     t.bigint "search_id"
     t.string "channel_id"
+    t.string "origin"
     t.index ["channel_id", "collection_id"], name: "index_collection_items_on_channel_id_and_collection_id", unique: true
-    t.index ["channel_id"], name: "index_collection_items_on_channel_id", unique: true
+    t.index ["channel_id"], name: "index_collection_items_on_channel_id"
     t.index ["collection_id"], name: "index_collection_items_on_collection_id"
     t.index ["search_id"], name: "index_collection_items_on_search_id"
     t.index ["video_id", "collection_id"], name: "index_collection_items_on_video_id_and_collection_id", unique: true
@@ -91,6 +92,34 @@ ActiveRecord::Schema.define(version: 2020_09_02_072452) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.string "comment_id"
+    t.string "video_id"
+    t.string "discussion_id"
+    t.string "parent_id"
+    t.string "author_name"
+    t.string "author_channel_id"
+    t.string "text"
+    t.integer "reply_count"
+    t.integer "like_count"
+    t.datetime "published_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["comment_id"], name: "index_comments_on_comment_id", unique: true
+    t.index ["discussion_id"], name: "index_comments_on_discussion_id"
+    t.index ["video_id"], name: "index_comments_on_video_id"
+  end
+
+  create_table "discussions", force: :cascade do |t|
+    t.string "video_id"
+    t.integer "total_results"
+    t.integer "results_per_page"
+    t.string "error"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["video_id"], name: "index_discussions_on_video_id", unique: true
   end
 
   create_table "exp_related_videos_01", id: false, force: :cascade do |t|

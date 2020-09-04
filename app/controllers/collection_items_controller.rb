@@ -13,14 +13,14 @@ class CollectionItemsController < ApplicationController
 
 
         sql = " insert into collection_items
-            (channel_id, collection_id, created_at, updated_at)
+            (channel_id, collection_id, origin, created_at, updated_at)
             values
-            ('#{channel_id}',#{params['collection_id']}, now(), now())
+            ('#{channel_id}',#{params['collection_id']}, '#{params['origin']}', now(), now())
             on conflict (channel_id,collection_id) DO NOTHING; "
 
         results = ActiveRecord::Base.connection.execute(sql)
 
-        redirect_to channel_path(channel_id), notice: "The channel was added to the collection" 
+        redirect_to channel_path(channel_id), notice: "The channel was added to the collection"
 
     end
 
@@ -67,9 +67,9 @@ class CollectionItemsController < ApplicationController
 
 
         # -- add search_id to collection_items
-        insert_sql = " insert into collection_items (video_id, collection_id, search_id, created_at, updated_at)  values "
+        insert_sql = " insert into collection_items (video_id, collection_id, search_id, origin, created_at, updated_at)  values "
         video_ids.each do |video_id|
-            sql = insert_sql + " ('#{video_id}',#{params['collection_id']}, #{src.id}, now(), now())  on conflict (video_id,collection_id) DO NOTHING; "
+            sql = insert_sql + " ('#{video_id}',#{params['collection_id']}, #{src.id}, '#{params['origin']}', now(), now())  on conflict (video_id,collection_id) DO NOTHING; "
             results = ActiveRecord::Base.connection.execute(sql)
         end
         redirect_to videos_path + "?" + params["search_params"], notice: "#{video_ids.size} videos added to collection"

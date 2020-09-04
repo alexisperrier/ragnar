@@ -25,6 +25,8 @@
 <h2>
     <%= @videos.count()  %> videos
 </h2>
+<div class="clearfix"></div>
+<%= paginate @videos %>
 <ul class="list-unstyled msg_list">
 <% @videos.each do |video| %>
     <%= render 'videos/video_liste', video: video  %>
