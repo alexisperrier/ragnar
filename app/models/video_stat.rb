@@ -6,4 +6,8 @@ class VideoStat < ApplicationRecord
         self.preload(:video).where(video_id: videos).group(:video_id).maximum(:views)
     end
 
+    def describe()
+        "#{views} views, #{comment_count} comments, #{like_count} likes, #{dislike_count} dislikes"
+    end
+
 end

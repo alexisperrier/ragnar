@@ -21,7 +21,7 @@
 
         </div>
 
-        <div style = "width:300px; float:left; display:inline; margin-right: 10px;">
+        <div style = "width:400px; float:left; display:inline; margin-right: 10px;">
         <strong>
             <% if @video.channel.title %>
                 <%= link_to @video.channel.title, channel_path(@video.channel) %>
@@ -41,8 +41,9 @@
                     <% if @video.pipeline.lang_conf %> [<%= @video.pipeline.lang_conf %>] <% end %>
             </li>
             <li><strong>Categorie:</strong><% if @video.category %><%= @video.category.category %><% end %></li>
-            <li><strong>wikitopics:</strong> <% if @video.wikitopics %> <%= @video.wikitopics %> <% end %></li>
+            <% if @video.wikitopics %><li><strong>wikitopics:</strong>  <%= @video.wikitopics %> </li><% end %>
         </ul>
+        <% if @video_stats %> <%= @video_stats.first.describe() %> <% end %>
         <% if not @video.collections.empty? %>
         <p> <strong>This video belongs to collections:  </strong></p>
         <ul>
@@ -78,6 +79,7 @@
           </div>
     </div>
 
+<!-- comments -->
 <div class="col-md-3">
     <div class="x_panel" >
         <div class="x_title">
@@ -99,6 +101,30 @@
         <% end %>
     </div>
 </div>
+
+
+
+<% if @video.discussion %>
+
+    <div class="col-md-3">
+        <div class="x_panel" >
+            <div class="x_title">
+                <h2> Comments</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <ul class="list-unstyled msg_list">
+                    <% @video.discussion.comments.each do |c| %>
+                        <li>
+                            [<%= link_to c.author_name, channel_path(c.author_channel_id) %>] <%= c.text %>
+                        </li>
+                    <% end %>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+<% end %>
 
 <div class="col-md-3">
     <div class="x_panel" >

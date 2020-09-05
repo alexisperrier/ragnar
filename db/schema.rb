@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_04_132843) do
+ActiveRecord::Schema.define(version: 2020_09_05_083616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -361,6 +361,10 @@ ActiveRecord::Schema.define(version: 2020_09_04_132843) do
     t.string "source", limit: 3, default: "rss"
     t.integer "views", default: 0
     t.string "viewed_at", limit: 10, null: false
+    t.integer "like_count"
+    t.integer "dislike_count"
+    t.integer "favorite_count"
+    t.integer "comment_count"
     t.index ["video_id", "viewed_at"], name: "unique_video_stat", unique: true
   end
 

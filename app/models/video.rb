@@ -13,6 +13,8 @@ class Video < ApplicationRecord
     has_many    :collections, through: :collection_items
     has_many    :searches, through: :collection_items
     has_one     :caption
+    has_one     :discussion
+    has_many     :comments, through: :discussion
     accepts_nested_attributes_for :pipeline
 
     attr_accessor :upstream_count, :downstream_count

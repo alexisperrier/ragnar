@@ -50,7 +50,11 @@ class VideosController < ApplicationController
   end
 
   def show
-      @views = @video.video_stat.order(:viewed_at).map{|s| [s.viewed_at, s.views]  }.to_h
+      @video_stats = VideoStat.where(video_id:  @video.video_id).order(:viewed_at => 'desc')
+      if @video_stats.count > 1
+          @views = @video_stats.map{|s| [s.viewed_at, s.views]  }.to_h
+      end
+
       upstream = @video.recommendations.group(:src_video_id).count
       @video.upstream_count = Recommendation.where(tgt_video_id: @video.id ).count
       @video.downstream_count = Recommendation.where(src_video_id: @video.id ).count
