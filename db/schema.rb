@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_05_083616) do
+ActiveRecord::Schema.define(version: 2020_09_05_135221) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -174,6 +174,16 @@ ActiveRecord::Schema.define(version: 2020_09_05_083616) do
     t.string "filename"
     t.datetime "created_at", default: -> { "now()" }
     t.index ["origin", "channel_id"], name: "origin_channel_id", unique: true
+  end
+
+  create_table "origins", force: :cascade do |t|
+    t.string "channel_id"
+    t.string "video_id"
+    t.string "filename"
+    t.string "title"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "pipeline", id: false, force: :cascade do |t|
