@@ -3,6 +3,7 @@
 
 Rails.application.routes.draw do
   resources :searches
+    post 'collections/validate'
     get 'collection_items/index'
     get 'collection_items/edit'
     post 'collection_items/addvideos'

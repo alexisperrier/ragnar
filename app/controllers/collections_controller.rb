@@ -21,17 +21,69 @@ class CollectionsController < ApplicationController
   # GET /collections/new
   def new
     @collection = Collection.new
+    @confirmation = false
+
   end
 
   # GET /collections/1/edit
   def edit
   end
 
-  # POST /collections
-  # POST /collections.json
+  def validate
+      binding.pry
+      @collection = Collection.new(collection_params)
+      binding.pry
+      filename = ActiveStorage::Blob.service.send(:path_for, @collection.csvfile.key)
+      @messages, @warnings, @errors = Collection.validate_upload(filename)
+      binding.pry
+      @confirmation = true
+      binding.pry
+      render :new
+  end
+
   def create
+
     @collection = Collection.new(collection_params)
     @collection.user = current_user
+    # handle collectoin creation and collection_items creation
+    @collection.save
+    # a tester
+    filename = ActiveStorage::Blob.service.send(:path_for, @collection.csvfile.key)
+    channel_ids, video_ids = Collection.extract_items(filename)
+    # Create new channels
+    if not channel_ids.empty?
+        existing_channel_ids = Channel.select("channel_id").where(:channel_id => channel_ids).map{|c| c.channel_id}
+        if existing_channel_ids.size < channel_ids.size
+            new_channel_ids = channel_ids - existing_channel_ids
+            new_channel_ids.each do |channel_id|
+                Channel.create({channel_id: channel_id, origin: @collection.title})
+                Pipeline.create({channel_id: channel_id, status: :incomplete})
+            end
+        end
+        # create collection items
+        channel_ids.each do |channel_id|
+            CollectionItem.create({channel_id: channel_id, origin: @collection.title, collection_id: @collection.id})
+        end
+    end
+
+    # create new videos
+    if not video_ids.empty?
+        existing_video_ids = Video.select("video_id").where(:video_id => video_ids).map{|c| c.video_id}
+        if existing_video_ids.size < video_ids.size
+            new_video_ids = video_ids - existing_video_ids
+            new_video_ids.each do |video_id|
+                Video.create({video_id: video_id, origin: @collection.title})
+                Pipeline.create({video_id: video_id, status: :incomplete})
+            end
+        end
+        # create collection items
+        video_ids.each do |video_id|
+            CollectionItem.create({video_id: video_id, origin: @collection.title, collection_id: @collection.id})
+        end
+
+    end
+
+    # create collections
 
     respond_to do |format|
       if @collection.save
@@ -76,6 +128,6 @@ class CollectionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def collection_params
-      params.require(:collection).permit(:title, :description)
+      params.require(:collection).permit(:title, :description, :csvfile)
     end
 end

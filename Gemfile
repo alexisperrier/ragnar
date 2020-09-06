@@ -60,5 +60,7 @@ gem 'gentelella-rails'
 gem 'devise'
 gem "chartkick"
 
-# gem 'daru-view', git: 'https://github.com/SciRuby/daru-view'
+gem 'daru-view'  # , git: 'https://github.com/SciRuby/daru-view'
+gem 'daru'
+gem 'rover-df'
 gem 'find_with_order'

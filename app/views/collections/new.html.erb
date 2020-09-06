@@ -1,5 +1,81 @@
 <h1>New Collection</h1>
 
-<%= render 'form', collection: @collection %>
+<% if @messages %>
+<ul>
+    <% @messages.each do |text| %>
+    <li>
+    <%= text %>
+    </li>
+    <% end %>
+</ul>
+<% end %>
+
+<% if @warnings %>
+<ul>
+    <% @warnings.each do |text| %>
+    <li>
+    <%= text %>
+    </li>
+    <% end %>
+</ul>
+<% end %>
+
+<% if @errors %>
+<ul>
+    <% @errors.each do |text| %>
+    <li style = "color: F66;">
+    <%= text %>
+    </li>
+    <% end %>
+</ul>
+<% end %>
+
+<%#= render 'form', collection: @collection %>
+
+<% if @confirmation %>
+    <% path = collections_path %>
+<% else %>
+    <% path = collections_validate_path %>
+<% end %>
+    <%= form_with(url: path, scope: :collection, local: true) do |form| %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_field :description %>
+  </div>
+
+<br />Upload a csv file
+<br />
+<br />path : <%= path %>
+<br />@confirmation : <%= @confirmation %>
+
+<br />
+    <%= form.file_field :csvfile, multiple: false, direct_upload: true %>
+
+    <br />
+
+
+    <input type="hidden" name="confirmation" value = @confirmation>
+  <div class="actions">
+      <% if @confirmation %>
+        <%= form.submit "confirm creation" %>
+      <% else %>
+        <%= form.submit "check file"  %>
+      <% end %>
+
+
+  </div>
+<% end %>
+
+
+
+
+
+
 
 <%= link_to 'Back', collections_path %>
