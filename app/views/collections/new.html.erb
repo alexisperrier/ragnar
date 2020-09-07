@@ -1,4 +1,5 @@
 <h1>New Collection</h1>
+<%#= render 'form', collection: @collection %>
 
 <% if @messages %>
 <ul>
@@ -23,14 +24,13 @@
 <% if @errors %>
 <ul>
     <% @errors.each do |text| %>
-    <li style = "color: F66;">
-    <%= text %>
+    <li style = "color: F66; font-style: bold;">
+        <%= text %>
     </li>
     <% end %>
 </ul>
 <% end %>
 
-<%#= render 'form', collection: @collection %>
 
 <% if @confirmation %>
     <% path = collections_path %>
@@ -49,18 +49,28 @@
     <%= form.text_field :description %>
   </div>
 
-<br />Upload a csv file
-<br />
 <br />path : <%= path %>
-<br />@confirmation : <%= @confirmation %>
 
-<br />
+<br /><br />
+<% if @csvfilename %>
+    Filename: <%= @csvfilename %>
+    <input type="hidden" name="csvfilename" value = <%= @csvfilename %>>
+<% end %>
+
+<br /><br />
+<% if @confirmation %>
+    <input type="hidden" name="confirmation" value = @confirmation>
+<% else %>
+    <br />Upload a csv file
     <%= form.file_field :csvfile, multiple: false, direct_upload: true %>
+<% end %>
 
+
+<br />@confirmation : <%= @confirmation %>
     <br />
 
-
     <input type="hidden" name="confirmation" value = @confirmation>
+
   <div class="actions">
       <% if @confirmation %>
         <%= form.submit "confirm creation" %>

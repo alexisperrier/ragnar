@@ -16,7 +16,8 @@ class Collection < ApplicationRecord
         has_videos   = df.vector_names.include? 'video_id'
 
         if has_channels
-            channel_ids = df['channel_id'].to_a.sort
+            # channel_ids = df['channel_id'].to_a.sort
+            channel_ids = df['channel_id'].map{|id| id.to_s}.to_a.sort
             # format
             channel_ids = channel_ids.filter{|id| id if (id.length == 24) && id[0..1] == 'UC'  }
 
@@ -26,14 +27,14 @@ class Collection < ApplicationRecord
         end
 
         if has_videos
-            video_ids = df['video_id'].to_a.sort
+            video_ids = df['video_id'].map{|id| id.to_s}.to_a.sort
+            # video_ids = df['video_id'].to_a.sort
             # format
-            video_ids = video_ids.filter{|id| id if (id.length == 24) && id[0..1] == 'UC'  }
+            video_ids = video_ids.filter{|id| id if (id.length == 11) }
 
             # duplicates
             video_ids = video_ids.uniq
         end
-
         return channel_ids, video_ids
 
     end
@@ -68,13 +69,15 @@ class Collection < ApplicationRecord
         end
 
         if has_channels
-            channel_ids = df['channel_id'].to_a.sort
+
+            # channel_ids = df['channel_id'].to_a.sort
+            channel_ids = df['channel_id'].map{|id| id.to_s}.to_a.sort
             # check format of channel_id
             format = channel_ids.map{|id|  (id.length == 24) && id[0..1] == 'UC'  }
             if format.count(true) == df.shape[0]
                 messages.append("All channel ids are properly formatted")
             else
-                errors.append("Out of #{df.shape[0]} channel ids, #{format.count(true)} are not properl formatted. \n -channel_id has 24 characters\n- channel_id starts with UC")
+                errors.append("Out of #{df.shape[0]} channel ids, #{df.shape[0] - format.count(true)} are not properl formatted. <br />-channel_id has 24 characters<br />- channel_id starts with UC")
                 channel_ids = channel_ids.filter{|id| id if (id.length == 24) && id[0..1] == 'UC'  }
             end
 
@@ -95,7 +98,10 @@ class Collection < ApplicationRecord
         end
 
         if has_videos
-            video_ids = df['video_id'].to_a.sort
+
+            video_ids = df['video_id'].map{|id| id.to_s}.to_a.sort
+            # video_ids = df['video_id'].to_a.sort
+            
             # check format of video_id
             format = video_ids.map{|id|  (id.length == 11) }
             if format.count(true) == df.shape[0]

@@ -14,7 +14,7 @@ class CollectionsController < ApplicationController
   def show
       @page_title = @collection.title
       @channels = @collection.channels.preload(:collection_items).joins(:collection_items).order("title asc").limit(100)
-      query = @collection.videos.joins(:channel, :collection_items => :search).order("channel.title asc").page params[:page]
+      query = @collection.videos.joins(:channel).left_joins(:collection_items => :search).order("channel.title asc").page params[:page]
       @videos = query.preload(:channel, :collection_items => :search)
   end
 
@@ -30,14 +30,14 @@ class CollectionsController < ApplicationController
   end
 
   def validate
-      binding.pry
+
       @collection = Collection.new(collection_params)
-      binding.pry
-      filename = ActiveStorage::Blob.service.send(:path_for, @collection.csvfile.key)
-      @messages, @warnings, @errors = Collection.validate_upload(filename)
-      binding.pry
+      @csvfilename = ActiveStorage::Blob.service.send(:path_for, @collection.csvfile.key)
+
+      @messages, @warnings, @errors = Collection.validate_upload(@csvfilename)
+
       @confirmation = true
-      binding.pry
+
       render :new
   end
 
@@ -45,12 +45,15 @@ class CollectionsController < ApplicationController
 
     @collection = Collection.new(collection_params)
     @collection.user = current_user
-    # handle collectoin creation and collection_items creation
+    # handle collection creation and collection_items creation
     @collection.save
-    # a tester
-    filename = ActiveStorage::Blob.service.send(:path_for, @collection.csvfile.key)
-    channel_ids, video_ids = Collection.extract_items(filename)
+
+
+    # TODO check if file exists
+    channel_ids, video_ids = Collection.extract_items(params['csvfilename'])
+
     # Create new channels
+
     if not channel_ids.empty?
         existing_channel_ids = Channel.select("channel_id").where(:channel_id => channel_ids).map{|c| c.channel_id}
         if existing_channel_ids.size < channel_ids.size
@@ -83,7 +86,6 @@ class CollectionsController < ApplicationController
 
     end
 
-    # create collections
 
     respond_to do |format|
       if @collection.save
@@ -128,6 +130,6 @@ class CollectionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def collection_params
-      params.require(:collection).permit(:title, :description, :csvfile)
+      params.require(:collection).permit(:title, :description, :csvfile,:csvfilename)
     end
 end
