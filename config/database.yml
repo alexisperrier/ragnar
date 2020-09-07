@@ -50,6 +50,8 @@ test:
 
 production:
   <<: *default
-  database: ragnar_production
-  username: ragnar
-  password: <%= ENV['RAGNAR_DATABASE_PASSWORD'] %>
+  database: ytkojo-proddb
+  username: postgres
+  port: 3307
+  password: <%= ENV['YTKOJO_DB_PWD'] %>
+  host: 127.0.0.1
