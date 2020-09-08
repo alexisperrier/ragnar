@@ -50,8 +50,8 @@ class Collection < ApplicationRecord
         errors   = []
         warnings = []
         messages = []
-        messages.append("- the file has #{df.shape[0]} rows and #{df.shape[1]} column(s)  ")
-        messages.append("- the file columns are #{df.vector_names} ")
+        messages.append("the file has #{df.shape[0]} rows and #{df.shape[1]} column(s)  ")
+        messages.append("the file columns are #{df.vector_names} ")
 
         if df.shape[0] == 0
             errors.append("The file has no rows")
@@ -77,7 +77,8 @@ class Collection < ApplicationRecord
             if format.count(true) == df.shape[0]
                 messages.append("All channel ids are properly formatted")
             else
-                errors.append("Out of #{df.shape[0]} channel ids, #{df.shape[0] - format.count(true)} are not properl formatted. <br />-channel_id has 24 characters<br />- channel_id starts with UC")
+                errors.append("Out of #{df.shape[0]} channel ids, #{format.count(false)} are not properly formatted. (Not 24 characters, doesn't start with 'UC')
+                    #{channel_ids.filter{|id|  (id.length != 24) || id[0..1] != 'UC'  }}" )
                 channel_ids = channel_ids.filter{|id| id if (id.length == 24) && id[0..1] == 'UC'  }
             end
 
@@ -91,23 +92,26 @@ class Collection < ApplicationRecord
 
             # check existence of channels
             channels = Channel.joins(:pipeline).where(:channel_id => channel_ids).preload(:pipeline)
-            messages.append("- #{channels.count} channels already exists, #{df['channel_id'].to_a.size -  channels.count } will be created")
+            messages.append("#{channels.count} channels already exists, #{df['channel_id'].to_a.size -  channels.count } will be created")
             status = channels.map{|c| c.pipeline.status}.group_by(&:itself).transform_values(&:count)
-            messages.append("- Status of known channels: #{status}")
-
+            messages.append("Status of known channels: #{status}")
+        else
+            channel_ids = []
         end
 
         if has_videos
 
             video_ids = df['video_id'].map{|id| id.to_s}.to_a.sort
             # video_ids = df['video_id'].to_a.sort
-            
+
             # check format of video_id
             format = video_ids.map{|id|  (id.length == 11) }
             if format.count(true) == df.shape[0]
                 messages.append("All video ids are properly formatted")
             else
-                errors.append("Out of #{df.shape[0]} video ids, #{format.count(true)} are not properl formatted. \n -video_id has 11 characters")
+                errors.append("Out of #{df.shape[0]} video ids, #{format.count(false)} are not properly formatted (not 11 characters)
+                    #{video_ids.filter{|id|  (id.length != 11) }}
+                ")
                 video_ids = video_ids.filter{|id| id if (id.length == 24) && id[0..1] == 'UC'  }
             end
 
@@ -120,11 +124,14 @@ class Collection < ApplicationRecord
             end
 
             # check existence of videos
-            videos = Channel.joins(:pipeline).where(:video_id => video_ids).preload(:pipeline)
-            messages.append("- #{videos.count} videos already exists, #{df['video_id'].to_a.size -  videos.count } will be created")
-            status = videos.map{|c| c.pipeline.status}.group_by(&:itself).transform_values(&:count)
-            messages.append("- Status of known videos: #{status}")
-
+            if video_ids.size > 0
+                videos = Channel.joins(:pipeline).where(:video_id => video_ids).preload(:pipeline)
+                messages.append("#{videos.count} videos already exists, #{df['video_id'].to_a.size -  videos.count } will be created")
+                status = videos.map{|c| c.pipeline.status}.group_by(&:itself).transform_values(&:count)
+                messages.append("Status of known videos: #{status}")
+            end
+        else
+            video_ids = []
         end
         return messages, warnings, errors
 

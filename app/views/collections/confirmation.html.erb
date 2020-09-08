@@ -1,0 +1,51 @@
+<h1>Confirm collection creation</h1>
+<% if @messages %>
+<h3> Your csv file </h3>
+<ul>
+    <% @messages.each do |text| %>
+        <li> <%= text %> </li>
+    <% end %>
+</ul>
+<% end %>
+
+<% if @warnings %>
+<h3> Warnings: </h3>
+<ul>
+    <% @warnings.each do |text| %>
+        <li><%= text %></li>
+    <% end %>
+</ul>
+<% end %>
+
+<% if @errors %>
+<h3 style = "color: #F66; font-style: bold;"> Errors </h3>
+<p>Your file has the following errors:</p>
+<ul>
+    <% @errors.each do |text| %>
+        <li style = "color: #F66; font-style: bold;"> <%= text %></li>
+    <% end %>
+</ul>
+<% end %>
+
+<%= form_with(url: collections_path, scope: :collection, local: true) do |form| %>
+
+<div class="field">
+  <%= form.label :title %>
+  <%= form.text_field :title %>
+</div>
+
+<div class="field">
+  <%= form.label :description %>
+  <%= form.text_area :description, size: '30x20' %>
+</div>
+
+<% if @csvfilename %>
+    Filename: <%= @csvfilename %>
+    <input type="hidden" name="csvfilename" value = <%= @csvfilename %>>
+<% end %>
+
+  <div class="actions">
+        <%= form.submit "confirm creation" %>
+        or <%= link_to 'Go back', new_collection_path %>
+  </div>
+<% end %>

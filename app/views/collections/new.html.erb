@@ -1,43 +1,28 @@
-<h1>New Collection</h1>
-<%#= render 'form', collection: @collection %>
+<h1>Create a Collection</h1>
+<h3>Step 1: data validation</h3>
+<p>
+    Upload a csv file with a list of channel ids and/or video_ids
+</p>
+<p>
+    The content should respect the following format:
+</p>
 
-<% if @messages %>
 <ul>
-    <% @messages.each do |text| %>
-    <li>
-    <%= text %>
-    </li>
-    <% end %>
+    <ol>
+        CSV file separated with commas (not semicolons)
+    </ol>
+    <ol>
+        columns header should be either: channel_id, video_id or both (lowercase)
+    </ol>
+    <ol>
+        channel_ids should be 24 character long and start with "UC". For instance: <em>UC20dglUTkVqzY9ipx_iOnng</em>
+    </ol>
+    <ol>
+        video_ids should be 11 character long. For instance: <em>GkhwHBS1xbk</em>
+    </ol>
 </ul>
-<% end %>
 
-<% if @warnings %>
-<ul>
-    <% @warnings.each do |text| %>
-    <li>
-    <%= text %>
-    </li>
-    <% end %>
-</ul>
-<% end %>
-
-<% if @errors %>
-<ul>
-    <% @errors.each do |text| %>
-    <li style = "color: F66; font-style: bold;">
-        <%= text %>
-    </li>
-    <% end %>
-</ul>
-<% end %>
-
-
-<% if @confirmation %>
-    <% path = collections_path %>
-<% else %>
-    <% path = collections_validate_path %>
-<% end %>
-    <%= form_with(url: path, scope: :collection, local: true) do |form| %>
+<%= form_with(url: collections_validate_path, scope: :collection, local: true) do |form| %>
 
   <div class="field">
     <%= form.label :title %>
@@ -46,46 +31,14 @@
 
   <div class="field">
     <%= form.label :description %>
-    <%= form.text_field :description %>
+    <%= form.text_area :description %>
   </div>
 
-<br />path : <%= path %>
-
-<br /><br />
-<% if @csvfilename %>
-    Filename: <%= @csvfilename %>
-    <input type="hidden" name="csvfilename" value = <%= @csvfilename %>>
-<% end %>
-
-<br /><br />
-<% if @confirmation %>
-    <input type="hidden" name="confirmation" value = @confirmation>
-<% else %>
     <br />Upload a csv file
     <%= form.file_field :csvfile, multiple: false, direct_upload: true %>
-<% end %>
 
-
-<br />@confirmation : <%= @confirmation %>
-    <br />
-
-    <input type="hidden" name="confirmation" value = @confirmation>
 
   <div class="actions">
-      <% if @confirmation %>
-        <%= form.submit "confirm creation" %>
-      <% else %>
         <%= form.submit "check file"  %>
-      <% end %>
-
-
   </div>
 <% end %>
-
-
-
-
-
-
-
-<%= link_to 'Back', collections_path %>

@@ -21,8 +21,7 @@ class CollectionsController < ApplicationController
   # GET /collections/new
   def new
     @collection = Collection.new
-    @confirmation = false
-
+    # @confirmation = false
   end
 
   # GET /collections/1/edit
@@ -36,20 +35,15 @@ class CollectionsController < ApplicationController
 
       @messages, @warnings, @errors = Collection.validate_upload(@csvfilename)
 
-      @confirmation = true
-
-      render :new
+      render :confirmation
   end
 
   def create
 
     @collection = Collection.new(collection_params)
     @collection.user = current_user
-    # handle collection creation and collection_items creation
     @collection.save
 
-
-    # TODO check if file exists
     channel_ids, video_ids = Collection.extract_items(params['csvfilename'])
 
     # Create new channels
