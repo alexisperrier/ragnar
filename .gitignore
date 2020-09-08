@@ -7,6 +7,10 @@
 *.csv
 *.csv#
 
+
+config/database.yml
+app.yaml
+
 .DS_Store
 **/.DS_Store
 

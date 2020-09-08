@@ -64,3 +64,5 @@ gem 'daru-view'  # , git: 'https://github.com/SciRuby/daru-view'
 gem 'daru'
 gem 'rover-df'
 gem 'find_with_order'
+
+gem "appengine", "~> 0.5.0"
