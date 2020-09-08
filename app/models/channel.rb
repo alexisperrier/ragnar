@@ -12,13 +12,17 @@ class Channel < ApplicationRecord
     has_many    :collection_items
     has_many    :collections, through: :collection_items
     belongs_to  :collection, optional: true
-    
+
     scope :active, -> {  includes(:channel_stat).joins(:pipeline).where("pipeline.status = 'active'").where(country: "FR").preload(:pipeline)  }
 
     ACTIVITIES = ["frenetic", "energised", "active", "steady", "sluggish", "asleep", "cold"]
     validates :activity, inclusion: ACTIVITIES
     COUNTRIES =   Channel.select(:country).order(:country).distinct.map{|c| c.country } - ["",nil, "FR"]
     COUNTRIES =  ["All","FR","not FR","Null"] + COUNTRIES
+
+    def self.valid_channel_id(channel_id)
+        return (channel_id.size == 24) && (channel_id[0..1] == "UC")
+    end
 
     def to_param
       channel_id

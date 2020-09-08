@@ -9,6 +9,24 @@
   <strong>Description:</strong>
   <%= @collection.description %>
 </p>
+
+<% if @exports %>
+<h2>
+    <%= @exports.count()  %> exports
+</h2>
+<ul class="list-unstyled msg_list">
+    <% @exports.each do |export| %>
+    <% export.export_items.each do |export_item| %>
+        <% if export_item.csvfile.attachment %>
+        <li style = "background: <%= cycle('#f7f7f7', '#FFF') -%>;">
+            <%= link_to  "[#{export_item.nrows}x#{export_item.ncolumns}]  #{export_item.title.to_s} on #{export_item.created_at.strftime('%Y-%m-%d %H:%M:%S')}",  rails_blob_url(export_item.csvfile, disposition: "attachment")  %>
+        </li>
+        <% end %>
+    <% end %>
+    <% end %>
+</ul>
+<% end %>
+
 <h2>
     <%= @channels.count()  %> channels
 </h2>

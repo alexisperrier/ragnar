@@ -22,6 +22,10 @@ class Video < ApplicationRecord
     scope :recent, -> { where("published_at > ?", 1.day.ago).preload(:pipeline, :channel)}
     scope :active, -> { joins(:pipeline).where("pipeline.status = 'active'")  }
 
+    def self.valid_video_id(video_id)
+        return (video_id.size == 11) 
+    end
+
 
     def upstream_channels
         sql = "select count(*) as n, v.channel_id

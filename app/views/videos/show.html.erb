@@ -23,10 +23,12 @@
 
         <div style = "width:400px; float:left; display:inline; margin-right: 10px;">
         <strong>
+            <% if @video.channel %>
             <% if @video.channel.title %>
                 <%= link_to @video.channel.title, channel_path(@video.channel) %>
             <% else %>
                 <%= link_to @video.channel_id, channel_path(@video.channel) %>
+            <% end %>
             <% end %>
         </strong>
         <ul>
@@ -43,7 +45,9 @@
             <li><strong>Categorie:</strong><% if @video.category %><%= @video.category.category %><% end %></li>
             <% if @video.wikitopics %><li><strong>wikitopics:</strong>  <%= @video.wikitopics %> </li><% end %>
         </ul>
-        <% if @video_stats %> <%= @video_stats.first.describe() %> <% end %>
+        <% if @video_stats && @video_stats.size > 0 %> 
+            <%= @video_stats.first.describe() %>
+        <% end %>
         <% if not @video.collections.empty? %>
         <p> <strong>This video belongs to collections:  </strong></p>
         <ul>

@@ -7,19 +7,24 @@ class ChannelsController < ApplicationController
     end
 
     def create
-
-        if Channel.find(channel_params['channel_id']).nil?
+        if Channel.valid_channel_id(channel_params['channel_id'])
+            channel_id = channel_params['channel_id']
+        else
+            respond_to do |format|
+                format.html { redirect_to channels_path, notice: 'This channel_id is not valid'  }
+            end
+            return
+        end
+        if Channel.where(:channel_id => channel_id ).size == 0
             @channel = Channel.create(channel_params)
             @pipeline = Pipeline.create({channel_id: @channel.id})
             respond_to do |format|
-                format.html { redirect_to @channel, notice: 'channel was successfully created.' }
-                format.json { render :show, status: :created, location: @channel }
+                format.html { redirect_to @channel, notice: 'The channel was successfully created. It will soon be completed.' }
             end
         else
-            @channel = Channel.find(channel_params['channel_id']).nil?
+            @channel = Channel.find(channel_id)
             respond_to do |format|
                 format.html { redirect_to channels_path, notice: 'channel already exists'  }
-                format.json { render :show, status: :created, location: @channel }
             end
         end
     end

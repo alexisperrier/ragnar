@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_05_144256) do
+ActiveRecord::Schema.define(version: 2020_09_08_125645) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -163,10 +163,24 @@ ActiveRecord::Schema.define(version: 2020_09_05_144256) do
     t.date "harvest_date"
   end
 
-  create_table "export", id: false, force: :cascade do |t|
-    t.serial "id", null: false
-    t.string "location", null: false
-    t.datetime "generated_at", default: -> { "now()" }
+  create_table "export_items", force: :cascade do |t|
+    t.string "export_id"
+    t.string "title"
+    t.integer "filesize"
+    t.integer "nrows"
+    t.integer "ncolumns"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["export_id"], name: "index_export_items_on_export_id"
+  end
+
+  create_table "exports", force: :cascade do |t|
+    t.string "collection_id"
+    t.string "title"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collection_id"], name: "index_exports_on_collection_id"
   end
 
   create_table "flow", id: false, force: :cascade do |t|

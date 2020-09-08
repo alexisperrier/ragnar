@@ -1,16 +1,17 @@
 # Next
 - exports
-- graph: channel status, video status, timeline ...
 - collections are multi users
-- create staging database as clone of prod?
-- create new channel
-- create new video
+- css
 
-- bug when no video in collection from file
+- create staging database as clone of prod?
 - create billel account
 - spinner while page loads
+- graph: in collections channel status, video status, timeline ...
+- bug when no video in collection from file
 
 == Done
+- create new channel
+- create new video
 
 - domain name config
 

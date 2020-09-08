@@ -75,18 +75,26 @@ class VideosController < ApplicationController
   end
 
   def create
-      if Video.find(video_params['video_id']).nil?
+
+      if Video.valid_video_id(video_params['video_id'])
+          video_id = video_params['video_id']
+      else
+          respond_to do |format|
+              format.html { redirect_to videos_path, notice: 'This video_id is not valid'  }
+          end
+          return
+      end
+
+      if Video.where(:video_id => video_id ).size == 0
           @video = Video.create(video_params)
           @pipeline = Pipeline.create({video_id: @video.id})
           respond_to do |format|
               format.html { redirect_to @video, notice: 'video was successfully created.' }
-              format.json { render :show, status: :created, location: @video }
           end
       else
-          @video = Video.find(video_params['video_id']).nil?
+          @video = Video.find(video_id).nil?
           respond_to do |format|
               format.html { redirect_to videos_path, notice: 'video already exists'  }
-              format.json { render :show, status: :created, location: @video }
           end
       end
   end
@@ -95,10 +103,8 @@ class VideosController < ApplicationController
     respond_to do |format|
       if @video.update(video_params)
         format.html { redirect_to @video, notice: 'Video was successfully updated.' }
-        format.json { render :show, status: :ok, location: @video }
       else
         format.html { render :edit }
-        format.json { render json: @video.errors, status: :unprocessable_entity }
       end
     end
   end

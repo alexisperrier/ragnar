@@ -2,8 +2,14 @@
 # see https://guides.rubyonrails.org/routing.html
 
 Rails.application.routes.draw do
-  resources :searches
+    resources :collections do
+        member do
+            get 'export'
+        end
+    end
+    resources :searches
     post 'collections/validate'
+    # get 'collections/export'
     get 'collection_items/index'
     get 'collection_items/edit'
     post 'collection_items/addvideos'
@@ -11,7 +17,7 @@ Rails.application.routes.draw do
     root to: "welcome#index"
     get 'welcome/index'
     devise_for :users
-    resources :collections
+    # resources :collections
     resources :videos
     resources :helms
     resources :channels
