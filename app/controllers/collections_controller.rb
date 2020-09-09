@@ -7,17 +7,21 @@ class CollectionsController < ApplicationController
       # channels
 
       item_title = 'channels'
-      relation = @collection.channels.joins(:pipeline).preload(:pipeline, :channel_stat).left_joins(:channel_stat)
+      relation = @collection.channels.joins(:pipeline).preload(:pipeline, :channel_stat).left_joins(:channel_stat);
+
 
       df_channel = Daru::DataFrame.new(
             relation.map{|record| record.attributes.symbolize_keys}
       )
+
       df_pipeline = Daru::DataFrame.new(
             relation.map{|c| c.pipeline}.map{|record| record.attributes.symbolize_keys}
       )
+
       df_stat = Daru::DataFrame.new(
           relation.filter{|c| c.channel_stat if not c.channel_stat.nil? }.map{|c| c.channel_stat}.map{|record| record.attributes.symbolize_keys}
       )
+
       df = df_channel.join(df_stat, how: :outer, on: [:channel_id]);
       df = df.join(df_pipeline, how: :inner, on: [:channel_id]);
 
@@ -30,23 +34,29 @@ class CollectionsController < ApplicationController
       end
       # videos
 
+
       item_title = 'videos'
-      relation = @collection.videos.joins(:pipeline, :video_stat).preload(:pipeline, :video_stat)
+      relation = @collection.videos.joins(:pipeline).preload(:pipeline)
+
 
       df_videos = Daru::DataFrame.new(
             relation.map{|record| record.attributes.symbolize_keys}
       )
+
       df_pipeline = Daru::DataFrame.new(
             relation.map{|c| c.pipeline}.map{|record| record.attributes.symbolize_keys}
       )
+
 
       views   = VideoStat.where(:video => relation.map{|v|v.video_id}.uniq).group(:video_id).maximum(:views)
       df_stat = Daru::DataFrame.new(
           {:video_id => views.keys, :views => views.values}
       )
 
+
       df = df_videos.join(df_pipeline, how: :inner, on: [:video_id]);
       df = df.join(df_stat, how: :outer, on: [:video_id]);
+
       if df.shape[0] > 0
           export_item = ExportItem.create({ export_id: export.id, title: item_title, nrows: df.shape[0], ncolumns: df.shape[1]})
           filename    = "export_#{@collection.title.gsub(/\s+/, "_").underscore}_#{item_title}_#{Time.now.strftime('%Y%m%d_%H%M%S')}.csv"
@@ -54,6 +64,7 @@ class CollectionsController < ApplicationController
           tmp_filename = Export.to_csv(df)
           export_item.csvfile.attach(io: File.open(tmp_filename), filename: filename);
       end
+
 
       # Comments
       item_title = 'comments'
@@ -62,6 +73,7 @@ class CollectionsController < ApplicationController
       df = Daru::DataFrame.new(
             relation.map{|record| record.attributes.symbolize_keys}
       )
+
       if df.shape[0] > 0
           export_item = ExportItem.create({ export_id: export.id, title: item_title, nrows: df.shape[0], ncolumns: df.shape[1]})
           filename    = "export_#{@collection.title.gsub(/\s+/, "_").underscore}_#{item_title}_#{Time.now.strftime('%Y%m%d_%H%M%S')}.csv"
@@ -69,13 +81,16 @@ class CollectionsController < ApplicationController
           tmp_filename = Export.to_csv(df)
           export_item.csvfile.attach(io: File.open(tmp_filename), filename: filename);
       end
+
 
       # Captions
       item_title = 'captions'
       relation = Caption.where(:video_id => relation.map{|v|v.video_id}.uniq)
+
       df = Daru::DataFrame.new(
             relation.map{|record| record.attributes.symbolize_keys}
       )
+
       if df.shape[0] > 0
           export_item = ExportItem.create({ export_id: export.id, title: item_title, nrows: df.shape[0], ncolumns: df.shape[1]})
           filename    = "export_#{@collection.title.gsub(/\s+/, "_").underscore}_#{item_title}_#{Time.now.strftime('%Y%m%d_%H%M%S')}.csv"
@@ -83,7 +98,6 @@ class CollectionsController < ApplicationController
           tmp_filename = Export.to_csv(df)
           export_item.csvfile.attach(io: File.open(tmp_filename), filename: filename);
       end
-      
       redirect_to collection_path(@collection), notice: "Data exported for channels, videos, comments and captions"
 
   end
@@ -98,9 +112,9 @@ class CollectionsController < ApplicationController
   # GET /collections/1.json
   def show
       @page_title = @collection.title
-      @channels = @collection.channels.preload(:collection_items).joins(:collection_items).order("title asc").limit(100)
-      query = @collection.videos.joins(:channel).left_joins(:collection_items => :search).order("channel.title asc").page params[:page]
-      @videos = query.preload(:channel, :collection_items => :search)
+      @channels = @collection.channels.preload(:collection_items, :pipeline).joins(:collection_items, :pipeline).order("title asc").limit(100)
+      query = @collection.videos.joins(:channel, :pipeline).left_joins(:collection_items => :search).order("channel.title asc").page params[:page]
+      @videos = query.preload(:channel, :pipeline, :collection_items => :search)
       # @exports = @collection.exports.map{|export| export.export_items }
       @exports = @collection.exports
   end

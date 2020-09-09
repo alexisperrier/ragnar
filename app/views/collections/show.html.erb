@@ -14,8 +14,8 @@
 <h2>
     <%= @exports.count()  %> exports
 </h2>
-<ul class="list-unstyled msg_list">
     <% @exports.each do |export| %>
+    <ul class="list-unstyled msg_list">
     <% export.export_items.each do |export_item| %>
         <% if export_item.csvfile.attachment %>
         <li style = "background: <%= cycle('#f7f7f7', '#FFF') -%>;">
@@ -23,8 +23,8 @@
         </li>
         <% end %>
     <% end %>
+    </ul>
     <% end %>
-</ul>
 <% end %>
 
 <h2>
