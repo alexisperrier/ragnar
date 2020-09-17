@@ -10,10 +10,15 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require_tree .
- *= require_self
  */
-.turbolinks-progress-bar {
-  height: 15px;
-  background-color: red;
-}
+
+ //= require_gentelella
+ //= require_gentelella-custom
+ //= require_self
+ //= require_tree .
+
+
+ .turbolinks-progress-bar {
+   height: 8px;
+   background-color: #FF0000;
+ }

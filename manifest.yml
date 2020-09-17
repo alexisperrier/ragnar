@@ -1,0 +1,10 @@
+development:
+ rails:
+  configuration:
+  asset_pipeline_enabled: false
+  asset_pipeline_precompile: false
+production:
+ rails:
+  configuration:
+  asset_pipeline_enabled: true
+  asset_pipeline_precompile: true

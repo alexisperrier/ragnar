@@ -20,27 +20,33 @@
 
           <div class="menu_section">
             <ul class="nav side-menu">
-              <li><a href="/channels">Chaînes</a></li>
-              <li><a href="/videos">Vidéos</a></li>
-              <li><a href="/helms">Backend</a></li>
-              <li><a href="/export">Exports</a></li>
+              <li><a href="/channels">
+<%= fa_icon "cc" %>
+                  Chaînes</a></li>
+              <li><a href="/videos">
+<%= fa_icon "youtube-play" %>
+                  Vidéos</a></li>
+              <li><a href="/helms">
+<%= fa_icon "dashboard" %>
+                  Backend</a></li>
             </ul>
           </div>
           <div class="menu_section">
               <ul class="nav side-menu">
-                <li><%= link_to 'Collections', collections_path %>
+                <li>
+                    <a href="/collections">
+<%= fa_icon "cubes" %>
+                    Collections</a></li>
                 <ul class="nav child-menu">
                 <% current_user.collections.each do |col| %>
-                <li style = "color: #FFF">
-                    <%= link_to "#{col.videos.count} #{col.title}" , col %>
-
+                <li>
+                    <%= link_to col.title , col %>
                 </li>
                 <% end %>
+                <li>
+                    <%= link_to 'New Collection', new_collection_path %>
+                </li>
                 </ul>
-            </li>
-            <li>
-            <%= link_to 'New Collection', new_collection_path %>
-            </li>
             </ul>
 
 

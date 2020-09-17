@@ -15,11 +15,12 @@
     <%= @exports.count()  %> exports
 </h2>
     <% @exports.each do |export| %>
-    <ul class="list-unstyled msg_list">
+    <%=  "Export on #{export.created_at.strftime('%Y-%m-%d %H:%M:%S')}" %>
+    <ul class="list-unstyled">
     <% export.export_items.each do |export_item| %>
         <% if export_item.csvfile.attachment %>
         <li style = "background: <%= cycle('#f7f7f7', '#FFF') -%>;">
-            <%= link_to  "[#{export_item.nrows}x#{export_item.ncolumns}]  #{export_item.title.to_s} on #{export_item.created_at.strftime('%Y-%m-%d %H:%M:%S')}",  rails_blob_url(export_item.csvfile, disposition: "attachment")  %>
+            <%= link_to  "[#{export_item.nrows}x#{export_item.ncolumns}]  #{export_item.title.to_s}",  rails_blob_url(export_item.csvfile, disposition: "attachment")  %>
         </li>
         <% end %>
     <% end %>
@@ -28,9 +29,9 @@
 <% end %>
 
 <h2>
-    <%= @channels.count()  %> channels
+    <%= @collection.channels.count()  %> channels
 </h2>
-
+<p>Max 100 channels shown here</p>
 <ul class="list-unstyled msg_list">
 <% @channels.each do |channel| %>
 <li style = "background: <%= cycle('#f7f7f7', '#FFF') -%>;">
@@ -41,7 +42,7 @@
 </ul>
 
 <h2>
-    <%= @videos.count()  %> videos
+    <%= @collection.videos.count()  %> videos
 </h2>
 <div class="clearfix"></div>
 <%= paginate @videos %>

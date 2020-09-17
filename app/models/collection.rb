@@ -16,6 +16,7 @@ class Collection < ApplicationRecord
         has_channels = df.vector_names.include? 'channel_id'
         has_videos   = df.vector_names.include? 'video_id'
 
+        channel_ids = []
         if has_channels
             # channel_ids = df['channel_id'].to_a.sort
             channel_ids = df['channel_id'].map{|id| id.to_s}.to_a.sort
@@ -24,9 +25,9 @@ class Collection < ApplicationRecord
 
             # duplicates
             channel_ids = channel_ids.uniq
-
         end
 
+        video_ids = []
         if has_videos
             video_ids = df['video_id'].map{|id| id.to_s}.to_a.sort
             # video_ids = df['video_id'].to_a.sort
@@ -126,7 +127,7 @@ class Collection < ApplicationRecord
 
             # check existence of videos
             if video_ids.size > 0
-                videos = Channel.joins(:pipeline).where(:video_id => video_ids).preload(:pipeline)
+                videos = Video.joins(:pipeline).where(:video_id => video_ids).preload(:pipeline)
                 messages.append("#{videos.count} videos already exists, #{df['video_id'].to_a.size -  videos.count } will be created")
                 status = videos.map{|c| c.pipeline.status}.group_by(&:itself).transform_values(&:count)
                 messages.append("Status of known videos: #{status}")

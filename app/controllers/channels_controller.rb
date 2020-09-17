@@ -52,17 +52,16 @@ class ChannelsController < ApplicationController
                 query = query.where(country: @search.country)
             end
 
-            @activity = query.select(:activity).group(:activity).count()
-            @activity_score = query.select(:activity_score).group(:activity_score).count()
-
-            if @search.sort_by
-                query = query.order("#{@search.sort_by} #{@search.sort_asc}")
-            end
-            query = query.preload(:pipeline)
         else
-            query = Channel.active.order("#{@search.sort_by} #{@search.sort_asc}")
+            query = Channel.joins(:pipeline).active
         end
 
+        @activity = query.select(:activity).group(:activity).count()
+        @activity_score = query.select(:activity_score).group(:activity_score).count()
+
+        if @search.sort_by
+            query = query.order("#{@search.sort_by} #{@search.sort_asc}")
+        end
         query = query.preload(:pipeline)
 
         @channel_count = query.count()

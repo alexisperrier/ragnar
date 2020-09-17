@@ -115,6 +115,8 @@ GEM
       activerecord (>= 3)
     flot-rails (0.0.7)
       jquery-rails
+    font-awesome-rails (4.7.0.5)
+      railties (>= 3.2, < 6.1)
     font-awesome-sass (4.7.0)
       sass (>= 3.2)
     gapic-common (0.3.4)
@@ -403,6 +405,7 @@ DEPENDENCIES
   daru-view
   devise
   find_with_order
+  font-awesome-rails
   gentelella-rails
   jbuilder (~> 2.7)
   kaminari

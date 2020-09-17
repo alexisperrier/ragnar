@@ -66,3 +66,4 @@ gem 'rover-df'
 gem 'find_with_order'
 
 gem "appengine", "~> 0.5.0"
+gem "font-awesome-rails"
