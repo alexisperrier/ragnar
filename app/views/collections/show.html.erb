@@ -10,14 +10,13 @@
   <%= @collection.description %>
 </p>
 
-<% if @exports %>
+<% if @last_export %>
 <h2>
-    <%= @exports.count()  %> exports
+    Most recent export
 </h2>
-    <% @exports.each do |export| %>
-    <%=  "Export on #{export.created_at.strftime('%Y-%m-%d %H:%M:%S')}" %>
+    <%=  "Export on #{@last_export.created_at.strftime('%Y-%m-%d %H:%M:%S')}" %>
     <ul class="list-unstyled">
-    <% export.export_items.each do |export_item| %>
+    <% @last_export.export_items.each do |export_item| %>
         <% if export_item.csvfile.attachment %>
         <li style = "background: <%= cycle('#f7f7f7', '#FFF') -%>;">
             <%= link_to  "[#{export_item.nrows}x#{export_item.ncolumns}]  #{export_item.title.to_s}",  rails_blob_url(export_item.csvfile, disposition: "attachment")  %>
@@ -25,7 +24,6 @@
         <% end %>
     <% end %>
     </ul>
-    <% end %>
 <% end %>
 
 <h2>

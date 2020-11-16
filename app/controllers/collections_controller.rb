@@ -116,7 +116,8 @@ class CollectionsController < ApplicationController
       query = @collection.videos.joins(:channel, :pipeline).left_joins(:collection_items => :search).order("channel.title asc").page params[:page]
       @videos = query.preload(:channel, :pipeline, :collection_items => :search)
       # @exports = @collection.exports.map{|export| export.export_items }
-      @exports = @collection.exports
+      # @exports = @collection.exports
+      @last_export = @collection.exports.last
   end
 
   # GET /collections/new
