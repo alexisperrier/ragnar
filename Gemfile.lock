@@ -366,6 +366,7 @@ GEM
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    tqdm (0.3.0)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -414,11 +415,13 @@ DEPENDENCIES
   pry
   puma (~> 4.1)
   rails
+  rake
   rover-df
   sass-rails (>= 6)
   selenium-webdriver
   spring
   spring-watcher-listen (~> 2.0.0)
+  tqdm
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)

@@ -6,7 +6,6 @@ class Export < ApplicationRecord
 
     def self.to_csv(df)
         filename = "#{Rails.root.to_s}/tmp/tmp_#{Digest::SHA1.hexdigest(Time.now.strftime('%Y%m%d%H%M%S'))}.csv"
-        print(filename)
         writer = CSV.open(filename, 'w')
         writer << df.vectors.to_a
         # remove commas
