@@ -53,6 +53,10 @@ namespace :export do
         @item_title = 'channels'
         relation = @collection.channels.joins(:pipeline).preload(:pipeline, :channel_stat).left_joins(:channel_stat);
 
+        relation.each do |ch|
+            ch.video.sort_by{|v| v.published_at}.last.published_at
+        end
+
         df_channel = Daru::DataFrame.new( relation.map{|record| record.attributes.symbolize_keys} )
         df_pipeline = Daru::DataFrame.new( relation.map{|c| c.pipeline}.map{|record| record.attributes.symbolize_keys} )
         df_stat = Daru::DataFrame.new( relation.filter{|c| c.channel_stat if not c.channel_stat.nil? }.map{|c| c.channel_stat}.map{|record| record.attributes.symbolize_keys} )
