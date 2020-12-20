@@ -65,19 +65,22 @@ namespace :export do
     end
 
     task :videos => :environment do
-        @collection = params()
-
         @item_title = 'videos'
-        relation    = @collection.videos.joins(:pipeline, :channel).preload(:pipeline, :channel);
-        df_videos   = Daru::DataFrame.new(relation.map{|record| record.attributes.symbolize_keys});
+        @collection = params()
+        channel_ids = @collection.channels.map{|c| c.channel_id}.uniq
+        videos = Video.where(:channel_id => channel_ids).joins(:pipeline, :channel).preload(:pipeline, :channel);
+        # relation    = @collection.videos.joins(:pipeline, :channel).preload(:pipeline, :channel);
+        puts "-  #{videos.size} videos "
+
+        df_videos   = Daru::DataFrame.new(videos.map{|record| record.attributes.symbolize_keys});
         puts "- df_videos #{df_videos.shape}"
-        df_pipeline = Daru::DataFrame.new(relation.map{|c| c.pipeline}.map{|record| record.attributes.symbolize_keys} )
+        df_pipeline = Daru::DataFrame.new(videos.map{|c| c.pipeline}.map{|record| record.attributes.symbolize_keys} )
         puts "- df_pipeline #{df_pipeline.shape}"
-        df_channel = Daru::DataFrame.new(relation.map{|c| c.channel}.uniq.map{|record| record.attributes.symbolize_keys} )
+        df_channel  = Daru::DataFrame.new(videos.map{|c| c.channel}.uniq.map{|record| record.attributes.symbolize_keys} )
         puts "- df_channel #{df_channel.shape}"
         puts "- views"
 
-        video_ids = relation.map{|v|v.video_id}.uniq
+        video_ids = videos.map{|v|v.video_id}.uniq
         videos_count = video_ids.size
         views = Hash.new
         step = 1000
@@ -107,8 +110,12 @@ namespace :export do
         @collection = params()
 
         @item_title = 'comments'
+
+
         puts "- videos"
-        videos = @collection.videos.joins(:pipeline).preload(:pipeline)
+        channel_ids = @collection.channels.map{|c| c.channel_id}.uniq
+        videos = Video.where(:channel_id => channel_ids).joins(:pipeline).preload(:pipeline);
+        # videos = @collection.videos.joins(:pipeline).preload(:pipeline)
         puts "- comments"
         relation = Comment.where(:video_id => videos.map{|v|v.video_id}.uniq)
         puts "- df"
@@ -121,7 +128,9 @@ namespace :export do
         @collection = params()
 
         @item_title = 'captions'
-        videos = @collection.videos.joins(:pipeline).preload(:pipeline)
+        channel_ids = @collection.channels.map{|c| c.channel_id}.uniq
+        videos = Video.where(:channel_id => channel_ids).joins(:pipeline).preload(:pipeline);
+        # videos = @collection.videos.joins(:pipeline).preload(:pipeline)
         relation = Caption.where(:video_id => videos.map{|v|v.video_id}.uniq)
         df = Daru::DataFrame.new(relation.map{|record| record.attributes.symbolize_keys})
         to_csv(df) if df.shape[0] > 0
