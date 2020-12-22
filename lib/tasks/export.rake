@@ -117,7 +117,7 @@ namespace :export do
                   if k % 100 == 0
                       puts "[#{k}] / #{video.comments.size} comments"
                   end
-                  video.comments.each |comment|
+                  video.comments.each do |comment|
                       csv << comment.attributes.values
                   end
               end
