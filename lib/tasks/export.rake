@@ -50,9 +50,10 @@ namespace :export do
     '''
     task :all => :environment do
         ActiveRecord::Base.logger.level = 1
-        since = '2020-11-01'
+        since = '2020-12-01'
         timesig = Time.now.strftime('%Y%m%d_%H%M%S')
-        collection_ids = [13,15,20,24]
+        # collection_ids = [13,15,20,24]
+        collection_ids = [13]
         # channel ids
         channel_ids = []
         collection_ids.tqdm.each do |cid|
@@ -107,11 +108,18 @@ namespace :export do
         videos = default_videos.left_joins(:comments).preload(:comments);
         puts "- #{videos.size} comments"
         filename = "kansatsu_comments_#{timesig}.csv"
+        k = 0
         CSV.open("#{Rails.root.to_s}/tmp/#{filename}", "wb") do |csv|
           csv << Comment.attribute_names;
           videos.tqdm.each do |video|
-              video.comments.each |comment|
-                  csv << comment.attributes.values
+              unless video.comments.blank?
+                  k +=1
+                  if k % 100 == 0
+                      puts "[#{k}] / #{video.comments.size} comments"
+                  end
+                  video.comments.each |comment|
+                      csv << comment.attributes.values
+                  end
               end
           end
         end
