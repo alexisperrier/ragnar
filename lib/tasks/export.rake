@@ -89,7 +89,7 @@ namespace :export do
         '''
             Videos
         '''
-        default_videos = Video.where(:channel_id => channel_ids).where("published_at > '#{since}'");
+        default_videos = Video.where(:channel_id => channel_ids).where("video.published_at > '#{since}'");
         puts "-  #{default_videos.size} videos"
 
         videos = default_videos.joins(:pipeline).preload(:pipeline);
