@@ -76,13 +76,13 @@ namespace :export do
 
         filename = "kansatsu_channels_stats_#{timesig}.csv"
         CSV.open("#{Rails.root.to_s}/tmp/#{filename}", "wb") do |csv|
-          csv << ChannelStat.attribute_names
+          csv << ChannelStat.attribute_names;
           channels.tqdm.map{|c| c.channel_stat}.each do |channel_stat|
               unless channel_stat.nil?
                   csv << channel_stat.attributes.values
-              end
-          end
-        end
+              end;
+          end;
+        end;
         puts "channels stats #{filename}"
 
         '''
@@ -102,6 +102,23 @@ namespace :export do
         puts "videos #{filename}"
 
         '''
+            Comments
+        '''
+        videos = default_videos.left_joins(:comments).preload(:comments);
+        puts "- #{videos.size} comments"
+        filename = "kansatsu_comments_#{timesig}.csv"
+        CSV.open("#{Rails.root.to_s}/tmp/#{filename}", "wb") do |csv|
+          csv << Comment.attribute_names;
+          videos.tqdm.each do |video|
+              video.comments.each |comment|
+                  csv << comment.attributes.values
+              end
+          end
+        end
+        puts "comments #{filename}"
+
+
+        '''
             Captions
         '''
         videos = default_videos.left_joins(:caption).preload(:caption);
@@ -118,44 +135,10 @@ namespace :export do
         puts "captions #{filename}"
 
         '''
-            Comments
-        '''
-        # videos = default_videos.left_joins(:discussion).preload(:discussion,:comments);
-        # puts "-  #{videos.size} discussions"
-        # filename = "kansatsu_comments_#{timesig}.csv"
-        # CSV.open("#{Rails.root.to_s}/tmp/#{filename}", "wb") do |csv|
-        #   csv << Comment.attribute_names;
-        #   videos.tqdm.each do |video|
-        #       unless video.discussion.blank? do
-        #           video.discussion.comments.each |comment|
-        #               csv << comment.attributes.values
-        #           end
-        #       end
-        #   end
-        # end
-
-
-        filename = "kansatsu_comments_#{timesig}.csv"
-        CSV.open("#{Rails.root.to_s}/tmp/#{filename}", "wb") do |csv|
-          csv << Comment.attribute_names;
-          default_videos.tqdm.each do |video|
-              unless video.discussion.blank? do
-                  video.discussion.comments.each |comment|
-                      csv << comment.attributes.values
-                  end
-              end
-          end
-        end
-
-
-        puts "comments #{filename}"
-
-
-
-        '''
             Videos stats views
         '''
         ActiveRecord::Base.logger.level = 1
+        puts "video stats"
         video_ids = default_videos.map{|v| v.video_id}
 
         videos_count = video_ids.size
@@ -175,7 +158,7 @@ namespace :export do
 
         filename = "kansatsu_videos_stats_#{timesig}.csv"
         CSV.open("#{Rails.root.to_s}/tmp/#{filename}", "wb") do |csv|
-          csv << ['video-id','views']
+          csv << ['video_id','views']
           views.keys.each do |video_id|
               csv << [video_id, views[video_id]]
           end
