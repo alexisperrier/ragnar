@@ -48,10 +48,10 @@ namespace :export do
         '''
             Videos
         '''
-        default_videos = Video.where(:channel_id => channel_ids).where(date_span);
-        puts "-  #{default_videos.size} videos"
+        default_videos = Video.where(:channel_id => channel_ids).where("published_at > '2020-01-01'");
 
         videos = default_videos.joins(:pipeline).preload(:pipeline);
+        puts "-  #{videos.size} videos"
         filename = "kansatsu_videos_#{timesig}.csv"
         CSV.open("#{Rails.root.to_s}/tmp/#{filename}", "wb") do |csv|
           csv << Video.attribute_names + Pipeline.attribute_names
