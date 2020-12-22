@@ -14,7 +14,7 @@ class Video < ApplicationRecord
     has_many    :searches, through: :collection_items
     has_one     :caption
     has_one     :discussion
-    has_many     :comments, through: :discussion
+    has_many     :comments
     accepts_nested_attributes_for :pipeline
 
     attr_accessor :upstream_count, :downstream_count
@@ -23,7 +23,7 @@ class Video < ApplicationRecord
     scope :active, -> { joins(:pipeline).where("pipeline.status = 'active'")  }
 
     def self.valid_video_id(video_id)
-        return (video_id.size == 11) 
+        return (video_id.size == 11)
     end
 
 

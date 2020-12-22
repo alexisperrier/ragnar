@@ -49,7 +49,8 @@ namespace :export do
         export for multiple collections with channels as main object
     '''
     task :all => :environment do
-        since = '2020-12-01'
+        ActiveRecord::Base.logger.level = 1
+        since = '2020-11-01'
         timesig = Time.now.strftime('%Y%m%d_%H%M%S')
         collection_ids = [13,15,20,24]
         # channel ids
@@ -66,11 +67,11 @@ namespace :export do
 
         filename = "kansatsu_channels_#{timesig}.csv"
         CSV.open("#{Rails.root.to_s}/tmp/#{filename}", "wb") do |csv|
-          csv << Channel.attribute_names + Pipeline.attribute_names
+          csv << Channel.attribute_names + Pipeline.attribute_names;
           channels.tqdm.each do |channel|
-            csv << channel.attributes.values + channel.pipeline.attributes.values
-          end
-        end
+            csv << channel.attributes.values + channel.pipeline.attributes.values;
+          end;
+        end;
         puts "channels #{filename}"
 
         filename = "kansatsu_channels_stats_#{timesig}.csv"
