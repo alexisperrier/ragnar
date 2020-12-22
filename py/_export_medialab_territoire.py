@@ -60,10 +60,8 @@ df.rename(columns = {
     inplace = True)
 
 
-df = df[[
-'channel_id','video_id', 'title', 'summary',
-'status', 'views',
-'duration','duration_in_seconds',  'pubdate', 'published_at', 'retrieved_at',
+df = df[['channel_id','video_id', 'title', 'summary',
+    'status', 'duration','duration_in_seconds',  'pubdate', 'published_at', 'retrieved_at',
 'category_id','tags', 'wikitopics',
 'default_audio_language', 'default_language',  'created_at' ]]
 
