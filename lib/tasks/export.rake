@@ -114,7 +114,7 @@ namespace :export do
           videos.tqdm.each do |video|
               unless video.comments.blank?
                   k +=1
-                  if k % 100 == 0
+                  if k % 5000 == 0
                       puts "[#{k}] / #{video.comments.size} comments"
                   end
                   video.comments.each do |comment|
